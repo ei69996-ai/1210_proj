@@ -119,44 +119,63 @@
     - [x] 섹션 구분 - 필터 영역 및 관광지 목록 영역 placeholder 추가
     - [x] `app/layout.tsx`에 Footer 통합 - flex 레이아웃으로 Navbar, children, Footer 순서 배치
     - [x] 접근성 개선 - ARIA 라벨 추가 (`aria-label` 속성)
-- [ ] 관광지 목록 기능 (MVP 2.1)
-  - [ ] `components/tour-card.tsx` 생성
-    - [ ] 썸네일 이미지 (기본 이미지 fallback)
-    - [ ] 관광지명
-    - [ ] 주소 표시
-    - [ ] 관광 타입 뱃지
-    - [ ] 간단한 개요 (1-2줄)
-    - [ ] 호버 효과 (scale, shadow)
-    - [ ] 클릭 시 상세페이지 이동
-  - [ ] `components/tour-list.tsx` 생성
-    - [ ] 그리드 레이아웃 (반응형)
-    - [ ] 카드 목록 표시
-    - [ ] 로딩 상태 (Skeleton UI)
-    - [ ] 빈 상태 처리
-  - [ ] API 연동
-    - [ ] `getAreaBasedList()` 호출
-    - [ ] 데이터 파싱 및 표시
-    - [ ] 에러 처리
-- [ ] 필터 기능
-  - [ ] `components/tour-filters.tsx` 생성
-    - [ ] 지역 필터 (시/도 선택)
-      - [ ] `getAreaCode()` API로 지역 목록 로드
-      - [ ] 드롭다운 또는 버튼 그룹
-      - [ ] "전체" 옵션
-    - [ ] 관광 타입 필터
-      - [ ] 관광지(12), 문화시설(14), 축제/행사(15), 여행코스(25), 레포츠(28), 숙박(32), 쇼핑(38), 음식점(39)
-      - [ ] 다중 선택 가능
-      - [ ] "전체" 옵션
+- [x] 관광지 목록 기능 (MVP 2.1)
+  - [x] `components/tour-card.tsx` 생성
+    - [x] 썸네일 이미지 (기본 이미지 fallback)
+    - [x] 관광지명
+    - [x] 주소 표시
+    - [x] 관광 타입 뱃지
+    - [x] 간단한 개요 (1-2줄) - TourItem에 overview 필드 없음으로 제외
+    - [x] 호버 효과 (scale, shadow)
+    - [x] 클릭 시 상세페이지 이동
+  - [x] `components/tour-list.tsx` 생성
+    - [x] 그리드 레이아웃 (반응형)
+    - [x] 카드 목록 표시
+    - [x] 로딩 상태 (Skeleton UI)
+    - [x] 빈 상태 처리
+  - [x] API 연동
+    - [x] `getAreaBasedList()` 호출
+    - [x] 데이터 파싱 및 표시
+    - [x] 에러 처리
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `TourCard` 컴포넌트 구현 - Next.js Image 컴포넌트 사용, 접근성 개선 (aria-label, focus-visible)
+    - [x] `TourList` 컴포넌트 구현 - 반응형 그리드 (모바일 1열, 태블릿 2열, 데스크톱 3열), role="list" 접근성 추가
+    - [x] `app/page.tsx` Server Component로 API 연동 - getAreaBasedList() 호출, 초기 12개 항목 조회
+    - [x] 에러 처리 개선 - Error 컴포넌트 사용, 사용자 친화적인 메시지
+    - [x] 이미지 에러 처리 개선 - 이미지 없을 때 SVG 플레이스홀더 표시
+    - [x] 스타일링 및 UX 개선 - 호버 애니메이션, 카드 간격, 접근성 검증 (키보드 네비게이션, ARIA 라벨)
+- [x] 필터 기능
+  - [x] `components/tour-filters.tsx` 생성
+    - [x] 지역 필터 (시/도 선택)
+      - [x] `getAreaCode()` API로 지역 목록 로드
+      - [x] Select 드롭다운 UI
+      - [x] "전체" 옵션
+    - [x] 관광 타입 필터
+      - [x] 관광지(12), 문화시설(14), 축제/행사(15), 여행코스(25), 레포츠(28), 숙박(32), 쇼핑(38), 음식점(39)
+      - [x] 단일 선택 (API 제약으로 인해 단일 선택으로 구현)
+      - [x] "전체" 옵션
     - [ ] 반려동물 동반 가능 필터 (MVP 2.5)
       - [ ] 토글 버튼
       - [ ] 크기별 필터 (소형, 중형, 대형)
-    - [ ] 정렬 옵션
-      - [ ] 최신순 (modifiedtime)
-      - [ ] 이름순 (가나다)
-    - [ ] 필터 상태 관리 (URL 쿼리 파라미터 또는 상태)
-  - [ ] 필터 적용 로직
-    - [ ] 필터 변경 시 API 재호출
-    - [ ] 필터 조합 처리
+    - [x] 정렬 옵션
+      - [x] 최신순 (modifiedtime)
+      - [x] 이름순 (가나다)
+    - [x] 필터 상태 관리 (URL 쿼리 파라미터)
+  - [x] 필터 적용 로직
+    - [x] 필터 변경 시 API 재호출
+    - [x] 필터 조합 처리
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `lib/types/filter.ts` 생성 - FilterState 인터페이스, SortOption 타입, SORT_OPTIONS 상수 정의
+    - [x] shadcn/ui Select 컴포넌트 설치 - 지역 필터 및 정렬 옵션에 사용
+    - [x] `TourFilters` 컴포넌트 구현 - 지역 필터(Select), 관광 타입 필터(버튼 그룹), 정렬 옵션(Select)
+    - [x] URL 쿼리 파라미터 동기화 - useRouter, useSearchParams 훅 사용, 필터 변경 시 URL 업데이트
+    - [x] `app/page.tsx` 수정 - searchParams async 처리, 필터 파라미터 추출, getAreaCode() 호출, 필터링된 관광지 조회
+    - [x] 정렬 로직 구현 - TourList 컴포넌트에 sort prop 추가, useMemo로 최신순/이름순 클라이언트 사이드 정렬
+    - [x] 필터 조합 처리 - 지역+타입 필터 동시 적용, URL 쿼리 파라미터로 상태 관리
+    - [x] 스타일링 및 UX 개선 - 필터 영역 카드 스타일, 반응형 레이아웃(모바일 세로, 데스크톱 가로), 선택된 필터 뱃지 표시
+    - [x] 접근성 개선 - ARIA 라벨, role="group", aria-pressed 속성 추가, 필터 초기화 버튼
 - [ ] 검색 기능 (MVP 2.3)
   - [ ] `components/tour-search.tsx` 생성
     - [ ] 검색창 UI (헤더 또는 메인 영역)
