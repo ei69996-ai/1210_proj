@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import Navbar from "@/components/Navbar";
 import { SyncUserProvider } from "@/components/providers/sync-user-provider";
+import { Toaster } from "@/components/ui/toast";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,8 +19,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SaaS 템플릿",
-  description: "Next.js + Clerk + Supabase 보일러플레이트",
+  title: "My Trip - 한국 관광지 정보",
+  description: "전국 관광지 정보를 한눈에 검색하고 확인하세요",
+  openGraph: {
+    title: "My Trip - 한국 관광지 정보",
+    description: "전국 관광지 정보를 한눈에 검색하고 확인하세요",
+    type: "website",
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "My Trip - 한국 관광지 정보",
+    description: "전국 관광지 정보를 한눈에 검색하고 확인하세요",
+  },
 };
 
 export default function RootLayout({
@@ -42,6 +54,7 @@ export default function RootLayout({
           <SyncUserProvider>
             <Navbar />
             {children}
+            <Toaster />
           </SyncUserProvider>
         </body>
       </html>
