@@ -11,6 +11,7 @@
  * 3. 로딩 상태 처리 (Skeleton UI)
  * 4. 빈 상태 처리 (관광지 없을 때 안내 메시지)
  * 5. 정렬 기능 (최신순, 이름순)
+ * 6. 검색 결과 개수 표시
  *
  * @dependencies
  * - components/tour-card.tsx: TourCard 컴포넌트
@@ -31,9 +32,19 @@ interface TourListProps {
   tours: TourItem[];
   isLoading?: boolean;
   sort?: SortOption;
+  totalCount?: number;
+  isSearchMode?: boolean;
+  searchKeyword?: string;
 }
 
-export function TourList({ tours, isLoading, sort = "latest" }: TourListProps) {
+export function TourList({
+  tours,
+  isLoading,
+  sort = "latest",
+  totalCount,
+  isSearchMode = false,
+  searchKeyword,
+}: TourListProps) {
   // 정렬된 관광지 목록
   const sortedTours = useMemo(() => {
     if (!tours.length) return tours;
@@ -92,11 +103,17 @@ export function TourList({ tours, isLoading, sort = "latest" }: TourListProps) {
         aria-live="polite"
       >
         <div className="mb-4 text-4xl" aria-hidden="true">
-          🔍
+          {isSearchMode ? "🔍" : "📍"}
         </div>
-        <h3 className="mb-2 text-lg font-semibold">관광지를 찾을 수 없습니다</h3>
+        <h3 className="mb-2 text-lg font-semibold">
+          {isSearchMode
+            ? `"${searchKeyword}"에 대한 검색 결과가 없습니다`
+            : "관광지를 찾을 수 없습니다"}
+        </h3>
         <p className="text-sm text-muted-foreground">
-          다른 조건으로 검색해보세요.
+          {isSearchMode
+            ? "다른 키워드로 검색하거나 필터를 조정해보세요."
+            : "다른 조건으로 검색해보세요."}
         </p>
       </div>
     );
@@ -104,16 +121,47 @@ export function TourList({ tours, isLoading, sort = "latest" }: TourListProps) {
 
   // 목록 표시
   return (
-    <div
-      className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
-      role="list"
-      aria-label="관광지 목록"
-    >
-      {sortedTours.map((tour) => (
-        <div key={tour.contentid} role="listitem">
-          <TourCard tour={tour} />
+    <div className="space-y-4">
+      {/* 검색 결과 개수 표시 */}
+      {(isSearchMode || totalCount !== undefined) && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            {isSearchMode ? (
+              <>
+                <span className="font-medium text-foreground">
+                  &quot;{searchKeyword}&quot;
+                </span>
+                {" 검색 결과: "}
+                <span className="font-medium text-foreground">
+                  {totalCount?.toLocaleString() || tours.length}
+                </span>
+                개
+              </>
+            ) : (
+              <>
+                전체{" "}
+                <span className="font-medium text-foreground">
+                  {totalCount?.toLocaleString() || tours.length}
+                </span>
+                개
+              </>
+            )}
+          </p>
         </div>
-      ))}
+      )}
+
+      {/* 관광지 목록 그리드 */}
+      <div
+        className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+        role="list"
+        aria-label="관광지 목록"
+      >
+        {sortedTours.map((tour) => (
+          <div key={tour.contentid} role="listitem">
+            <TourCard tour={tour} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

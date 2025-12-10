@@ -176,21 +176,30 @@
     - [x] 필터 조합 처리 - 지역+타입 필터 동시 적용, URL 쿼리 파라미터로 상태 관리
     - [x] 스타일링 및 UX 개선 - 필터 영역 카드 스타일, 반응형 레이아웃(모바일 세로, 데스크톱 가로), 선택된 필터 뱃지 표시
     - [x] 접근성 개선 - ARIA 라벨, role="group", aria-pressed 속성 추가, 필터 초기화 버튼
-- [ ] 검색 기능 (MVP 2.3)
-  - [ ] `components/tour-search.tsx` 생성
-    - [ ] 검색창 UI (헤더 또는 메인 영역)
-    - [ ] 검색 아이콘
-    - [ ] 엔터 또는 버튼 클릭으로 검색
-    - [ ] 검색 중 로딩 스피너
-  - [ ] 검색 API 연동
-    - [ ] `searchKeyword()` 호출
-    - [ ] 검색 결과 표시
-    - [ ] 검색 결과 개수 표시
-    - [ ] 결과 없음 메시지
-  - [ ] 검색 + 필터 조합
-    - [ ] 키워드 + 지역 필터
-    - [ ] 키워드 + 타입 필터
-    - [ ] 모든 필터 동시 적용
+- [x] 검색 기능 (MVP 2.3)
+  - [x] `components/tour-search.tsx` 생성
+    - [x] 검색창 UI (헤더 또는 메인 영역)
+    - [x] 검색 아이콘
+    - [x] 엔터 또는 버튼 클릭으로 검색
+    - [x] 검색어 초기화 버튼 (X 버튼)
+  - [x] 검색 API 연동
+    - [x] `searchKeyword()` 호출
+    - [x] 검색 결과 표시
+    - [x] 검색 결과 개수 표시
+    - [x] 결과 없음 메시지 (검색 모드별로 다른 메시지)
+  - [x] 검색 + 필터 조합
+    - [x] 키워드 + 지역 필터
+    - [x] 키워드 + 타입 필터
+    - [x] 모든 필터 동시 적용
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `TourSearch` 컴포넌트 구현 - 검색창 UI, 검색 아이콘, 엔터/버튼 클릭 검색, URL 쿼리 파라미터 동기화, 검색어 초기화 버튼
+    - [x] `components/Navbar.tsx` 수정 - 기존 disabled 검색창을 TourSearch 컴포넌트로 교체
+    - [x] `app/page.tsx` 수정 - keyword 파라미터 처리, 조건부 API 호출 (keyword 있으면 searchKeyword, 없으면 getAreaBasedList), 검색 + 필터 조합 지원
+    - [x] `components/tour-list.tsx` 수정 - 검색 결과 개수 표시, 검색 모드 표시, 검색 모드별 빈 상태 메시지 개선
+    - [x] 검색 + 필터 조합 처리 - searchKeyword() API가 필터 파라미터를 지원하므로 자연스럽게 조합 가능, URL 쿼리 파라미터로 상태 관리
+    - [x] 검색 UX 개선 - 검색어 초기화 버튼 (X), 검색 모드별 빈 상태 메시지, 검색 결과 개수 표시
+    - [x] 스타일링 및 접근성 개선 - role="search", aria-label, focus-visible 스타일, 키보드 네비게이션 지원
 - [ ] 네이버 지도 연동 (MVP 2.2)
   - [ ] `components/naver-map.tsx` 생성
     - [ ] Naver Maps API v3 초기화
