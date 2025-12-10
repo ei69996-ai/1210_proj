@@ -106,10 +106,19 @@
 
 ## Phase 2: 홈페이지 (`/`) - 관광지 목록
 
-- [ ] 페이지 기본 구조
-  - [ ] `app/page.tsx` 생성
-    - [ ] 기본 레이아웃 (헤더, 메인, 푸터)
-    - [ ] 반응형 컨테이너 설정
+- [x] 페이지 기본 구조
+  - [x] `app/page.tsx` 생성
+    - [x] 기본 레이아웃 (헤더, 메인, 푸터)
+    - [x] 반응형 컨테이너 설정
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `components/Footer.tsx` 생성 - 프로젝트 정보, 링크 섹션, 저작권 정보 포함
+    - [x] `app/page.tsx` 재구성 - 템플릿 코드를 My Trip 프로젝트에 맞게 변경
+    - [x] 반응형 컨테이너 설정 - 모바일(`px-4 py-6`), 태블릿(`px-6 py-8`), 데스크톱(`px-8 py-10`) 패딩 적용
+    - [x] 최대 너비 제한 - `max-w-7xl mx-auto` 중앙 정렬
+    - [x] 섹션 구분 - 필터 영역 및 관광지 목록 영역 placeholder 추가
+    - [x] `app/layout.tsx`에 Footer 통합 - flex 레이아웃으로 Navbar, children, Footer 순서 배치
+    - [x] 접근성 개선 - ARIA 라벨 추가 (`aria-label` 속성)
 - [ ] 관광지 목록 기능 (MVP 2.1)
   - [ ] `components/tour-card.tsx` 생성
     - [ ] 썸네일 이미지 (기본 이미지 fallback)

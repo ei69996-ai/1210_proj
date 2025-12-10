@@ -1,50 +1,30 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { RiSupabaseFill } from "react-icons/ri";
+/**
+ * @file page.tsx
+ * @description 홈페이지 - 관광지 목록
+ *
+ * My Trip 프로젝트의 메인 페이지입니다.
+ * 관광지 목록을 표시하고 필터링 및 검색 기능을 제공합니다.
+ *
+ * 향후 구현 예정:
+ * - 필터 영역 (지역, 타입, 반려동물 동반)
+ * - 관광지 목록 영역 (카드 그리드)
+ * - 네이버 지도 영역 (데스크톱)
+ */
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="min-h-[calc(100vh-80px)] flex items-center px-8 py-16 lg:py-24">
-      <section className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start lg:items-center">
-        {/* 좌측: 환영 메시지 */}
-        <div className="flex flex-col gap-8">
-          <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-            SaaS 앱 템플릿에 오신 것을 환영합니다
-          </h1>
-          <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed">
-            Next.js, Shadcn, Clerk, Supabase, TailwindCSS로 구동되는 완전한
-            기능의 템플릿으로 다음 프로젝트를 시작하세요.
-          </p>
-        </div>
+    <main className="min-h-[calc(100vh-80px)]">
+      <div className="max-w-7xl mx-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
+        {/* 필터 영역 (향후 구현) */}
+        <section className="mb-8" aria-label="필터 영역">
+          {/* Placeholder - 필터 컴포넌트가 여기에 추가됩니다 */}
+        </section>
 
-        {/* 우측: 버튼 세 개 세로 정렬 */}
-        <div className="flex flex-col gap-6">
-          <Link href="/instruments" className="w-full">
-            <Button className="w-full h-28 flex items-center justify-center gap-4 text-xl shadow-lg hover:shadow-xl transition-shadow">
-              <RiSupabaseFill className="w-8 h-8" />
-              <span>Supabase 데이터 쿼리 예시</span>
-            </Button>
-          </Link>
-          <Link href="/storage-test" className="w-full">
-            <Button
-              className="w-full h-28 flex items-center justify-center gap-4 text-xl shadow-lg hover:shadow-xl transition-shadow"
-              variant="outline"
-            >
-              <RiSupabaseFill className="w-8 h-8" />
-              <span>Storage 파일 업로드 테스트</span>
-            </Button>
-          </Link>
-          <Link href="/auth-test" className="w-full">
-            <Button
-              className="w-full h-28 flex items-center justify-center gap-4 text-xl shadow-lg hover:shadow-xl transition-shadow"
-              variant="outline"
-            >
-              <RiSupabaseFill className="w-8 h-8" />
-              <span>Clerk + Supabase 인증 연동</span>
-            </Button>
-          </Link>
-        </div>
-      </section>
+        {/* 관광지 목록 영역 (향후 구현) */}
+        <section aria-label="관광지 목록">
+          {/* Placeholder - 관광지 목록 컴포넌트가 여기에 추가됩니다 */}
+        </section>
+      </div>
     </main>
   );
 }
