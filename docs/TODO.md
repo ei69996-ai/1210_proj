@@ -559,45 +559,62 @@
 
 ## Phase 5: 북마크 페이지 (`/bookmarks`) - 선택 사항
 
-- [ ] Supabase 설정 확인
-  - [ ] `bookmarks` 테이블 확인 (db.sql 참고)
-    - [ ] `users` 테이블과의 관계 확인
-    - [ ] 인덱스 확인 (user_id, content_id, created_at)
-    - [ ] RLS 비활성화 확인 (개발 환경)
-- [ ] 북마크 목록 페이지
-  - [ ] `app/bookmarks/page.tsx` 생성
-    - [ ] 인증된 사용자만 접근 가능
-    - [ ] 로그인하지 않은 경우 로그인 유도
-  - [ ] `components/bookmarks/bookmark-list.tsx` 생성
-    - [ ] 사용자 북마크 목록 조회 (`getUserBookmarks()`)
-    - [ ] 카드 레이아웃 (홈페이지와 동일한 tour-card 사용)
-    - [ ] 빈 상태 처리 (북마크 없을 때)
-    - [ ] 로딩 상태 (Skeleton UI)
-- [ ] 북마크 관리 기능
-  - [ ] 정렬 옵션
-    - [ ] 최신순 (created_at DESC)
-    - [ ] 이름순 (가나다순)
-    - [ ] 지역별
-  - [ ] 일괄 삭제 기능
-    - [ ] 체크박스 선택
-    - [ ] 선택 항목 삭제
-    - [ ] 확인 다이얼로그
-  - [ ] 개별 삭제 기능
-    - [ ] 각 카드에 삭제 버튼
-- [ ] 페이지 통합 및 스타일링
-  - [ ] 반응형 디자인 확인
-  - [ ] 최종 페이지 확인
+- [x] Supabase 설정 확인
+  - [x] `bookmarks` 테이블 확인 (db.sql 참고)
+    - [x] `users` 테이블과의 관계 확인
+    - [x] 인덱스 확인 (user_id, content_id, created_at)
+    - [x] RLS 비활성화 확인 (개발 환경)
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `scripts/verify-supabase-setup.ts` 생성 - Supabase 데이터베이스 설정 검증 스크립트 작성 (tsx로 실행 가능)
+    - [x] `app/api/verify-supabase/route.ts` 생성 - 검증 API Route 생성 (GET /api/verify-supabase로 접근 가능)
+    - [x] 검증 함수 구현 - verifyTables, verifyForeignKeys, verifyUniqueConstraint, verifyIndexes, verifyRLS, verifyPermissions 함수 구현
+    - [x] 검증 결과 리포트 기능 - JSON 형식으로 검증 결과 반환 (성공/실패 요약 포함)
+- [x] 북마크 목록 페이지
+  - [x] `app/bookmarks/page.tsx` 생성
+    - [x] 인증된 사용자만 접근 가능
+    - [x] 로그인하지 않은 경우 로그인 유도
+  - [x] `components/bookmarks/bookmark-list.tsx` 생성
+    - [x] 사용자 북마크 목록 조회 (`getUserBookmarks()`)
+    - [x] 카드 레이아웃 (홈페이지와 동일한 tour-card 사용)
+    - [x] 빈 상태 처리 (북마크 없을 때)
+    - [x] 로딩 상태 (Skeleton UI)
+- [x] 북마크 관리 기능
+  - [x] 정렬 옵션
+    - [x] 최신순 (created_at DESC)
+    - [x] 이름순 (가나다순)
+    - [x] 지역별
+  - [x] 일괄 삭제 기능
+    - [x] 체크박스 선택
+    - [x] 선택 항목 삭제
+    - [x] 확인 다이얼로그
+  - [x] 개별 삭제 기능
+    - [x] 각 카드에 삭제 버튼
+- [x] 페이지 통합 및 스타일링
+  - [x] 반응형 디자인 확인
+  - [x] 최종 페이지 확인
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `app/bookmarks/page.tsx` 생성 - Server Component로 구현, Clerk auth() 함수로 인증 확인, 로그인하지 않은 경우 SignInButton으로 로그인 유도, 메타데이터 설정 (generateMetadata)
+    - [x] `components/bookmarks/bookmark-list.tsx` 생성 - Client Component로 구현, getUserBookmarks()로 북마크 목록 조회, getDetailCommon()로 각 관광지 상세 정보 병렬 조회, TourDetail을 TourItem으로 변환, TourCard 컴포넌트 재사용, 정렬 옵션 구현 (최신순, 이름순, 지역별), 체크박스 선택 기능 (Square/CheckSquare 아이콘 사용), 일괄 삭제 기능 (선택된 북마크 일괄 삭제), 개별 삭제 기능 (각 카드에 삭제 버튼), 확인 다이얼로그 (Dialog 컴포넌트), 삭제 후 목록 자동 갱신, toast 알림, 로딩 상태 (Skeleton UI), 빈 상태 처리, 에러 처리, 관광지 정보 조회 실패 시 해당 항목 제외하고 계속 진행, 접근성 개선 (ARIA 라벨, role 속성)
 
 ## Phase 6: 최적화 & 배포
 
-- [ ] 이미지 최적화
-  - [ ] `next.config.ts` 외부 도메인 설정
-    - [ ] 한국관광공사 이미지 도메인 추가
-    - [ ] 네이버 지도 이미지 도메인 추가
-  - [ ] Next.js Image 컴포넌트 사용 확인
-    - [ ] priority 속성 (above-the-fold)
-    - [ ] lazy loading (below-the-fold)
-    - [ ] responsive sizes 설정
+- [x] 이미지 최적화
+  - [x] `next.config.ts` 외부 도메인 설정
+    - [x] 한국관광공사 이미지 도메인 추가
+    - [x] 네이버 지도 이미지 도메인 추가
+  - [x] Next.js Image 컴포넌트 사용 확인
+    - [x] priority 속성 (above-the-fold)
+    - [x] lazy loading (below-the-fold)
+    - [x] responsive sizes 설정
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `next.config.ts` 외부 도메인 설정 개선 - 모든 도메인에 `protocol: "https"` 명시, 네이버 지도 이미지 도메인 추가 (`map.pstatic.net`, `ssl.pstatic.net`)
+    - [x] `components/tour-card.tsx` 이미지 최적화 - index prop 추가, 첫 6개 카드에 `priority={true}` 적용, 나머지 카드는 `loading="lazy"` 명시, `quality={85}` 추가
+    - [x] `components/tour-list.tsx` 수정 - TourCard에 index prop 전달
+    - [x] `components/tour-detail/detail-info.tsx` 이미지 최적화 - `quality={90}` 추가 (priority 이미지이므로 높은 품질)
+    - [x] `components/tour-detail/detail-gallery.tsx` 이미지 최적화 - 첫 번째 이미지 `quality={90}`, 나머지 이미지 `quality={85}`, 썸네일 `quality={75}`, 모달 내 이미지 `quality={95}` 추가
 - [ ] 전역 에러 핸들링
   - [ ] `app/error.tsx` 생성
   - [ ] `app/global-error.tsx` 생성

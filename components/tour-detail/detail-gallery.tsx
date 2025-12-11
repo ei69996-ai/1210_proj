@@ -186,6 +186,7 @@ export function DetailGallery({ images, title = "관광지" }: DetailGalleryProp
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                       priority={index === 0}
                       loading={index === 0 ? undefined : "lazy"}
+                      quality={index === 0 ? 90 : 85}
                       onError={() => handleImageError(index)}
                     />
                   ) : (
@@ -246,17 +247,18 @@ export function DetailGallery({ images, title = "관광지" }: DetailGalleryProp
                       }
                     }}
                   >
-                    {imageUrl && !hasError ? (
-                      <Image
-                        src={imageUrl}
-                        alt={image.imgname || `${title} 썸네일 ${index + 1}`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 25vw, (max-width: 1200px) 12.5vw, 10vw"
-                        loading="lazy"
-                        onError={() => handleImageError(index)}
-                      />
-                    ) : (
+                      {imageUrl && !hasError ? (
+                        <Image
+                          src={imageUrl}
+                          alt={image.imgname || `${title} 썸네일 ${index + 1}`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 25vw, (max-width: 1200px) 12.5vw, 10vw"
+                          loading="lazy"
+                          quality={75}
+                          onError={() => handleImageError(index)}
+                        />
+                      ) : (
                       <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
                         <svg
                           className="h-8 w-8"
@@ -345,6 +347,7 @@ export function DetailGallery({ images, title = "관광지" }: DetailGalleryProp
                           className="object-contain"
                           sizes="100vw"
                           priority={index === selectedIndex}
+                          quality={95}
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-black text-white">

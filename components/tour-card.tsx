@@ -38,9 +38,11 @@ interface TourCardProps {
   onHover?: (tourId: string | null) => void;
   /** 반려동물 정보 (선택 사항) */
   petInfo?: PetTourInfo | null;
+  /** 카드 인덱스 (priority 설정용, 첫 6개에만 priority 적용) */
+  index?: number;
 }
 
-export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo }: TourCardProps) {
+export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo, index }: TourCardProps) {
   // 이미지 URL 결정 (firstimage 우선, 없으면 firstimage2)
   const imageUrl = tour.firstimage || tour.firstimage2;
   
@@ -129,6 +131,9 @@ export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo 
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-110"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={index !== undefined && index < 6}
+              loading={index !== undefined && index < 6 ? undefined : "lazy"}
+              quality={85}
               onError={() => {
                 // 클라이언트에서만 이미지 에러 상태 업데이트 (Hydration 불일치 방지)
                 if (isMounted) {

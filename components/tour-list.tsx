@@ -217,7 +217,7 @@ export function TourList({
         role="list"
         aria-label="관광지 목록"
       >
-        {sortedTours.map((tour) => (
+        {sortedTours.map((tour, index) => (
           <div
             key={tour.contentid}
             ref={selectedTourId === tour.contentid ? selectedCardRef : null}
@@ -232,6 +232,7 @@ export function TourList({
               onSelect={onTourSelect}
               onHover={onTourHover}
               petInfo={petInfoMap?.get(tour.contentid)}
+              index={index}
             />
           </div>
         ))}
