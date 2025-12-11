@@ -22,7 +22,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { TourItem, PetTourInfo } from "@/lib/types/tour";
@@ -45,7 +45,14 @@ export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo 
   const imageUrl = tour.firstimage || tour.firstimage2;
   
   // 이미지 로딩 에러 상태 (클라이언트 사이드에서만 관리)
+  // Hydration 불일치 방지를 위해 초기값은 false로 유지하고, 클라이언트에서만 업데이트
   const [imageError, setImageError] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 클라이언트에서만 마운트 상태 설정 (Hydration 불일치 방지)
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // 관광 타입 이름 가져오기
   const typeName = TOUR_TYPE_MAP[tour.contenttypeid] || "기타";
@@ -55,8 +62,8 @@ export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo 
     ? `${tour.addr1} ${tour.addr2}`
     : tour.addr1;
 
-  // 반려동물 동반 가능 여부 확인
-  const isPetFriendly = petInfo?.chkpetleash === "Y";
+  // 반려동물 동반 가능 여부 확인 (Hydration 불일치 방지를 위해 클라이언트에서만 확인)
+  const isPetFriendly = isMounted && petInfo?.chkpetleash === "Y";
   const petSize = petInfo?.chkpetsize;
 
   // 플레이스홀더 SVG 컴포넌트 (항상 동일한 구조)
@@ -114,7 +121,6 @@ export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo 
         {/* 썸네일 이미지 */}
         <div 
           className="relative h-48 w-full overflow-hidden rounded-t-lg bg-muted"
-          suppressHydrationWarning
         >
           {imageUrl && !imageError ? (
             <Image
@@ -124,8 +130,10 @@ export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo 
               className="object-cover transition-transform duration-300 group-hover:scale-110"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               onError={() => {
-                // 이미지 로드 실패 시 플레이스홀더 표시
-                setImageError(true);
+                // 클라이언트에서만 이미지 에러 상태 업데이트 (Hydration 불일치 방지)
+                if (isMounted) {
+                  setImageError(true);
+                }
               }}
             />
           ) : (
