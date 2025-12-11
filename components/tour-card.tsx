@@ -25,14 +25,22 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { TourItem } from "@/lib/types/tour";
+import type { TourItem, PetTourInfo } from "@/lib/types/tour";
 import { TOUR_TYPE_MAP } from "@/lib/types/stats";
 
 interface TourCardProps {
   tour: TourItem;
+  /** 선택된 상태 여부 */
+  isSelected?: boolean;
+  /** 선택 핸들러 (지도 연동용) */
+  onSelect?: (tourId: string) => void;
+  /** 호버 핸들러 (지도 연동용) */
+  onHover?: (tourId: string | null) => void;
+  /** 반려동물 정보 (선택 사항) */
+  petInfo?: PetTourInfo | null;
 }
 
-export function TourCard({ tour }: TourCardProps) {
+export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo }: TourCardProps) {
   // 이미지 URL 결정 (firstimage 우선, 없으면 firstimage2)
   const imageUrl = tour.firstimage || tour.firstimage2;
   
@@ -46,6 +54,10 @@ export function TourCard({ tour }: TourCardProps) {
   const address = tour.addr2
     ? `${tour.addr1} ${tour.addr2}`
     : tour.addr1;
+
+  // 반려동물 동반 가능 여부 확인
+  const isPetFriendly = petInfo?.chkpetleash === "Y";
+  const petSize = petInfo?.chkpetsize;
 
   // 플레이스홀더 SVG 컴포넌트 (항상 동일한 구조)
   const PlaceholderIcon = () => (
@@ -67,13 +79,38 @@ export function TourCard({ tour }: TourCardProps) {
     </div>
   );
 
+  const handleClick = () => {
+    if (onSelect) {
+      onSelect(tour.contentid);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (onHover) {
+      onHover(tour.contentid);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (onHover) {
+      onHover(null);
+    }
+  };
+
   return (
     <Link
       href={`/places/${tour.contentid}`}
       className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
       aria-label={`${tour.title} 상세보기 - ${address}`}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <div className="h-full rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg focus-within:ring-2 focus-within:ring-ring">
+      <div
+        className={`h-full rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg focus-within:ring-2 focus-within:ring-ring ${
+          isSelected ? "ring-2 ring-primary ring-offset-2" : ""
+        }`}
+      >
         {/* 썸네일 이미지 */}
         <div className="relative h-48 w-full overflow-hidden rounded-t-lg bg-muted">
           {imageUrl && !imageError ? (
@@ -95,11 +132,26 @@ export function TourCard({ tour }: TourCardProps) {
 
         {/* 카드 내용 */}
         <div className="p-4">
-          {/* 관광 타입 뱃지 */}
-          <div className="mb-2">
+          {/* 관광 타입 뱃지 및 반려동물 아이콘 */}
+          <div className="mb-2 flex items-center gap-2">
             <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
               {typeName}
             </span>
+            {isPetFriendly && (
+              <span
+                className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                title="반려동물 동반 가능"
+                aria-label="반려동물 동반 가능"
+              >
+                <span aria-hidden="true">🐾</span>
+                반려동물 동반 가능
+                {petSize && (
+                  <span className="text-[10px] opacity-75">
+                    ({petSize})
+                  </span>
+                )}
+              </span>
+            )}
           </div>
 
           {/* 관광지명 */}

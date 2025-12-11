@@ -4,6 +4,7 @@
  *
  * 관광지 목록을 그리드 레이아웃으로 표시하는 컴포넌트입니다.
  * 로딩 상태, 빈 상태, 에러 상태를 처리합니다.
+ * 무한 스크롤 기능을 포함합니다.
  *
  * 주요 기능:
  * 1. 반응형 그리드 레이아웃 (모바일 1열, 태블릿 2열, 데스크톱 3열)
@@ -12,39 +13,99 @@
  * 4. 빈 상태 처리 (관광지 없을 때 안내 메시지)
  * 5. 정렬 기능 (최신순, 이름순)
  * 6. 검색 결과 개수 표시
+ * 7. 무한 스크롤 (Intersection Observer 사용)
  *
  * @dependencies
  * - components/tour-card.tsx: TourCard 컴포넌트
  * - components/ui/skeleton.tsx: Skeleton UI
+ * - components/ui/loading.tsx: Loading 컴포넌트
+ * - hooks/use-infinite-tours.ts: 무한 스크롤 훅
  * - lib/types/tour.ts: TourItem 타입
  * - lib/types/filter.ts: SortOption 타입
  */
 
 "use client";
 
-import { useMemo } from "react";
-import type { TourItem } from "@/lib/types/tour";
+import { useMemo, useEffect, useRef } from "react";
+import type { TourItem, PetTourInfo } from "@/lib/types/tour";
 import type { SortOption } from "@/lib/types/filter";
 import { TourCard } from "./tour-card";
 import { Skeleton } from "./ui/skeleton";
+import { Loading } from "./ui/loading";
+import { useInfiniteTours } from "@/hooks/use-infinite-tours";
 
 interface TourListProps {
-  tours: TourItem[];
-  isLoading?: boolean;
+  /** 초기 관광지 목록 (Server Component에서 가져온 첫 페이지) */
+  initialTours: TourItem[];
+  /** 전체 개수 */
+  totalCount: number;
+  /** 정렬 옵션 */
   sort?: SortOption;
-  totalCount?: number;
+  /** 검색 모드 여부 */
   isSearchMode?: boolean;
+  /** 검색 키워드 */
   searchKeyword?: string;
+  /** 지역 코드 */
+  areaCode?: string;
+  /** 관광 타입 ID */
+  contentTypeId?: string;
+  /** 선택된 관광지 ID */
+  selectedTourId?: string;
+  /** 관광지 선택 핸들러 */
+  onTourSelect?: (tourId: string) => void;
+  /** 호버된 관광지 ID */
+  hoveredTourId?: string | null;
+  /** 관광지 호버 핸들러 */
+  onTourHover?: (tourId: string | null) => void;
+  /** 초기 로딩 상태 (Server Component 로딩 중) */
+  isLoading?: boolean;
+  /** 반려동물 정보 Map (선택 사항) */
+  petInfoMap?: Map<string, PetTourInfo | null>;
 }
 
 export function TourList({
-  tours,
-  isLoading,
-  sort = "latest",
+  initialTours,
   totalCount,
+  sort = "latest",
   isSearchMode = false,
   searchKeyword,
+  areaCode,
+  contentTypeId,
+  selectedTourId,
+  onTourSelect,
+  hoveredTourId,
+  onTourHover,
+  isLoading: initialLoading = false,
+  petInfoMap,
 }: TourListProps) {
+  const selectedCardRef = useRef<HTMLDivElement>(null);
+
+  // 무한 스크롤 훅
+  const {
+    tours,
+    isLoading: isLoadingMore,
+    error: loadMoreError,
+    hasMore,
+    observerTargetRef,
+  } = useInfiniteTours({
+    initialTours,
+    totalCount,
+    keyword: searchKeyword,
+    areaCode,
+    contentTypeId,
+    numOfRows: 20,
+  });
+
+  // 선택된 관광지로 스크롤
+  useEffect(() => {
+    if (selectedTourId && selectedCardRef.current) {
+      selectedCardRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [selectedTourId]);
+
   // 정렬된 관광지 목록
   const sortedTours = useMemo(() => {
     if (!tours.length) return tours;
@@ -71,8 +132,8 @@ export function TourList({
 
     return sorted;
   }, [tours, sort]);
-  // 로딩 상태
-  if (isLoading) {
+  // 초기 로딩 상태
+  if (initialLoading) {
     return (
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 12 }).map((_, index) => (
@@ -157,11 +218,53 @@ export function TourList({
         aria-label="관광지 목록"
       >
         {sortedTours.map((tour) => (
-          <div key={tour.contentid} role="listitem">
-            <TourCard tour={tour} />
+          <div
+            key={tour.contentid}
+            ref={selectedTourId === tour.contentid ? selectedCardRef : null}
+            role="listitem"
+            className={`transition-all duration-200 ${
+              selectedTourId === tour.contentid ? "ring-2 ring-primary ring-offset-2 rounded-lg" : ""
+            }`}
+          >
+            <TourCard
+              tour={tour}
+              isSelected={selectedTourId === tour.contentid}
+              onSelect={onTourSelect}
+              onHover={onTourHover}
+              petInfo={petInfoMap?.get(tour.contentid)}
+            />
           </div>
         ))}
       </div>
+
+      {/* 무한 스크롤 타겟 및 로딩 인디케이터 */}
+      {hasMore && (
+        <div
+          ref={observerTargetRef}
+          className="flex flex-col items-center justify-center py-8"
+          role="status"
+          aria-live="polite"
+          aria-label="더 많은 관광지 로딩 중"
+        >
+          {isLoadingMore && (
+            <div aria-busy="true">
+              <Loading size="md" text="더 많은 관광지를 불러오는 중..." />
+            </div>
+          )}
+          {loadMoreError && (
+            <div className="text-sm text-destructive mt-2" role="alert">
+              {loadMoreError}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 모든 데이터 로드 완료 */}
+      {!hasMore && tours.length > 0 && (
+        <div className="text-center py-8 text-sm text-muted-foreground">
+          모든 관광지를 불러왔습니다.
+        </div>
+      )}
     </div>
   );
 }

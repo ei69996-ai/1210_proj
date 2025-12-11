@@ -26,8 +26,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import type { AreaCode } from "@/lib/types/tour";
 import { TOUR_TYPE_MAP } from "@/lib/types/stats";
-import type { SortOption } from "@/lib/types/filter";
-import { SORT_OPTIONS } from "@/lib/types/filter";
+import type { SortOption, PetSizeOption } from "@/lib/types/filter";
+import { SORT_OPTIONS, PET_SIZE_OPTIONS } from "@/lib/types/filter";
 import {
   Select,
   SelectContent,
@@ -36,6 +36,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface TourFiltersProps {
   /** 지역 목록 (서버에서 조회한 데이터) */
@@ -49,6 +51,8 @@ export function TourFilters({ areas }: TourFiltersProps) {
   // 현재 필터 상태 읽기
   const currentAreaCode = searchParams.get("areaCode") || undefined;
   const currentContentTypeId = searchParams.get("contentTypeId") || undefined;
+  const currentPetFriendly = searchParams.get("petFriendly") === "true";
+  const currentPetSize = (searchParams.get("petSize") as PetSizeOption) || undefined;
   const currentSort = (searchParams.get("sort") as SortOption) || "latest";
 
   // URL 쿼리 파라미터 업데이트 함수
@@ -93,6 +97,35 @@ export function TourFilters({ areas }: TourFiltersProps) {
     updateFilter("sort", value);
   };
 
+  // 반려동물 필터 토글
+  const handlePetFriendlyToggle = (checked: boolean) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (checked) {
+      params.set("petFriendly", "true");
+    } else {
+      params.delete("petFriendly");
+      params.delete("petSize"); // 반려동물 필터 해제 시 크기 필터도 제거
+    }
+    if (!params.has("sort")) {
+      params.set("sort", "latest");
+    }
+    router.push(`/?${params.toString()}`);
+  };
+
+  // 반려동물 크기 필터 변경
+  const handlePetSizeChange = (size: PetSizeOption) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (size === "all" || !size) {
+      params.delete("petSize");
+    } else {
+      params.set("petSize", size);
+    }
+    if (!params.has("sort")) {
+      params.set("sort", "latest");
+    }
+    router.push(`/?${params.toString()}`);
+  };
+
   return (
     <div className="space-y-4 rounded-lg border bg-card p-4 shadow-sm">
       {/* 필터 제목 */}
@@ -101,7 +134,7 @@ export function TourFilters({ areas }: TourFiltersProps) {
           필터
         </h2>
         {/* 필터 초기화 버튼 */}
-        {(currentAreaCode || currentContentTypeId || currentSort !== "latest") && (
+        {(currentAreaCode || currentContentTypeId || currentPetFriendly || currentSort !== "latest") && (
           <Button
             variant="ghost"
             size="sm"
@@ -201,8 +234,56 @@ export function TourFilters({ areas }: TourFiltersProps) {
         </div>
       </div>
 
+      {/* 반려동물 필터 */}
+      <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl" aria-hidden="true">🐾</span>
+            <Label htmlFor="pet-friendly-switch" className="text-sm font-medium">
+              반려동물 동반 가능
+            </Label>
+          </div>
+          <Switch
+            id="pet-friendly-switch"
+            checked={currentPetFriendly}
+            onCheckedChange={handlePetFriendlyToggle}
+            aria-label="반려동물 동반 가능 필터"
+          />
+        </div>
+
+        {/* 반려동물 크기 필터 (반려동물 필터 활성화 시에만 표시) */}
+        {currentPetFriendly && (
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">반려동물 크기</Label>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="반려동물 크기 필터">
+              <Button
+                variant={!currentPetSize || currentPetSize === "all" ? "default" : "outline"}
+                size="sm"
+                onClick={() => handlePetSizeChange("all")}
+                className="text-xs"
+                aria-pressed={!currentPetSize || currentPetSize === "all"}
+              >
+                전체
+              </Button>
+              {(["small", "medium", "large"] as const).map((size) => (
+                <Button
+                  key={size}
+                  variant={currentPetSize === size ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handlePetSizeChange(size)}
+                  className="text-xs"
+                  aria-pressed={currentPetSize === size}
+                >
+                  {PET_SIZE_OPTIONS[size]}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* 선택된 필터 표시 (선택 사항) */}
-      {(currentAreaCode || currentContentTypeId) && (
+      {(currentAreaCode || currentContentTypeId || currentPetFriendly) && (
         <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
           {currentAreaCode && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs">
@@ -212,6 +293,12 @@ export function TourFilters({ areas }: TourFiltersProps) {
           {currentContentTypeId && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs">
               타입: {TOUR_TYPE_MAP[currentContentTypeId]}
+            </span>
+          )}
+          {currentPetFriendly && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs">
+              🐾 반려동물 동반 가능
+              {currentPetSize && currentPetSize !== "all" && ` (${PET_SIZE_OPTIONS[currentPetSize]})`}
             </span>
           )}
         </div>

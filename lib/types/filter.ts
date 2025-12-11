@@ -11,6 +11,11 @@
 export type SortOption = "latest" | "name";
 
 /**
+ * 반려동물 크기 필터 옵션
+ */
+export type PetSizeOption = "small" | "medium" | "large" | "all";
+
+/**
  * 필터 상태 인터페이스
  */
 export interface FilterState {
@@ -18,6 +23,10 @@ export interface FilterState {
   areaCode?: string;
   /** 관광 타입 ID (단일 선택) */
   contentTypeId?: string;
+  /** 반려동물 동반 가능 필터 활성화 여부 */
+  petFriendly?: boolean;
+  /** 반려동물 크기 필터 (소형, 중형, 대형, 전체) */
+  petSize?: PetSizeOption;
   /** 정렬 옵션 */
   sort: SortOption;
 }
@@ -28,7 +37,19 @@ export interface FilterState {
 export const DEFAULT_FILTER_STATE: FilterState = {
   areaCode: undefined,
   contentTypeId: undefined,
+  petFriendly: undefined,
+  petSize: undefined,
   sort: "latest",
+} as const;
+
+/**
+ * 반려동물 크기 필터 옵션 라벨 매핑
+ */
+export const PET_SIZE_OPTIONS: Record<PetSizeOption, string> = {
+  small: "소형",
+  medium: "중형",
+  large: "대형",
+  all: "전체",
 } as const;
 
 /**

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { koKR } from "@clerk/localizations";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -60,6 +61,13 @@ export default function RootLayout({
             </div>
             <Toaster />
           </SyncUserProvider>
+          {/* 네이버 지도 API 스크립트 로드 */}
+          {process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID && (
+            <Script
+              src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID}`}
+              strategy="afterInteractive"
+            />
+          )}
         </body>
       </html>
     </ClerkProvider>

@@ -155,9 +155,9 @@
       - [x] 관광지(12), 문화시설(14), 축제/행사(15), 여행코스(25), 레포츠(28), 숙박(32), 쇼핑(38), 음식점(39)
       - [x] 단일 선택 (API 제약으로 인해 단일 선택으로 구현)
       - [x] "전체" 옵션
-    - [ ] 반려동물 동반 가능 필터 (MVP 2.5)
-      - [ ] 토글 버튼
-      - [ ] 크기별 필터 (소형, 중형, 대형)
+    - [x] 반려동물 동반 가능 필터 (MVP 2.5)
+      - [x] 토글 버튼
+      - [x] 크기별 필터 (소형, 중형, 대형)
     - [x] 정렬 옵션
       - [x] 최신순 (modifiedtime)
       - [x] 이름순 (가나다)
@@ -176,6 +176,15 @@
     - [x] 필터 조합 처리 - 지역+타입 필터 동시 적용, URL 쿼리 파라미터로 상태 관리
     - [x] 스타일링 및 UX 개선 - 필터 영역 카드 스타일, 반응형 레이아웃(모바일 세로, 데스크톱 가로), 선택된 필터 뱃지 표시
     - [x] 접근성 개선 - ARIA 라벨, role="group", aria-pressed 속성 추가, 필터 초기화 버튼
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `lib/types/filter.ts` 반려동물 필터 타입 추가 - PetSizeOption 타입, FilterState에 petFriendly, petSize 필드 추가, PET_SIZE_OPTIONS 상수 정의
+    - [x] `components/tour-filters.tsx` 반려동물 필터 UI 추가 - Switch 컴포넌트로 토글 버튼 구현, 반려동물 크기 필터 버튼 그룹 추가, URL 쿼리 파라미터 동기화 (petFriendly, petSize)
+    - [x] `lib/utils/pet-filter.ts` 생성 - 배치 반려동물 정보 조회 함수 (batchGetPetTourInfo), 반려동물 필터링 유틸리티 함수 (isPetFriendly, matchesPetSize, filterPetFriendlyTours)
+    - [x] `app/page.tsx` 반려동물 필터 로직 추가 - petFriendly 파라미터 확인, 배치로 반려동물 정보 조회, 필터링 적용, petInfoMap을 TourMapView에 전달
+    - [x] `components/tour-map-view.tsx` 반려동물 정보 전달 - petInfoMap prop 추가, TourList에 petInfoMap 전달
+    - [x] `components/tour-list.tsx` 반려동물 정보 전달 - petInfoMap prop 추가, TourCard에 petInfo 전달
+    - [x] `components/tour-card.tsx` 반려동물 아이콘 표시 - petInfo prop 추가, 반려동물 동반 가능 뱃지 표시 (🐾 아이콘, 크기 정보 포함)
 - [x] 검색 기능 (MVP 2.3)
   - [x] `components/tour-search.tsx` 생성
     - [x] 검색창 UI (헤더 또는 메인 영역)
@@ -200,42 +209,84 @@
     - [x] 검색 + 필터 조합 처리 - searchKeyword() API가 필터 파라미터를 지원하므로 자연스럽게 조합 가능, URL 쿼리 파라미터로 상태 관리
     - [x] 검색 UX 개선 - 검색어 초기화 버튼 (X), 검색 모드별 빈 상태 메시지, 검색 결과 개수 표시
     - [x] 스타일링 및 접근성 개선 - role="search", aria-label, focus-visible 스타일, 키보드 네비게이션 지원
-- [ ] 네이버 지도 연동 (MVP 2.2)
-  - [ ] `components/naver-map.tsx` 생성
-    - [ ] Naver Maps API v3 초기화
-    - [ ] 지도 컨테이너 설정
-    - [ ] 초기 중심 좌표 설정
-    - [ ] 줌 레벨 설정
-  - [ ] 마커 표시
-    - [ ] 관광지 목록을 마커로 표시
-    - [ ] 좌표 변환 (KATEC → WGS84: mapx/mapy / 10000000)
-    - [ ] 마커 클릭 시 인포윈도우
-      - [ ] 관광지명
-      - [ ] 간단한 설명
-      - [ ] "상세보기" 버튼
-    - [ ] 관광 타입별 마커 색상 구분 (선택 사항)
-  - [ ] 지도-리스트 연동
-    - [ ] 리스트 항목 클릭 → 지도 이동 및 마커 강조
-    - [ ] 리스트 항목 호버 → 마커 강조 (선택 사항)
-    - [ ] 마커 클릭 → 리스트 항목 강조
-  - [ ] 지도 컨트롤
-    - [ ] 줌 인/아웃 버튼
-    - [ ] 지도 유형 선택 (일반/스카이뷰)
-    - [ ] 현재 위치 버튼 (선택 사항)
-  - [ ] 반응형 레이아웃
-    - [ ] 데스크톱: 리스트(좌측 50%) + 지도(우측 50%) 분할
-    - [ ] 모바일: 탭 형태로 리스트/지도 전환
-- [ ] 페이지네이션
-  - [ ] 무한 스크롤 구현
-    - [ ] Intersection Observer 사용
-    - [ ] 하단 로딩 인디케이터
-    - [ ] 페이지당 10-20개 항목
-  - [ ] 또는 페이지 번호 선택 방식
-- [ ] 최종 통합 및 스타일링
-  - [ ] 모든 기능 통합 테스트
-  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
-  - [ ] 로딩 상태 개선
-  - [ ] 에러 처리 개선
+- [x] 네이버 지도 연동 (MVP 2.2)
+  - [x] `components/naver-map.tsx` 생성
+    - [x] Naver Maps API v3 초기화
+    - [x] 지도 컨테이너 설정
+    - [x] 초기 중심 좌표 설정
+    - [x] 줌 레벨 설정
+  - [x] 마커 표시
+    - [x] 관광지 목록을 마커로 표시
+    - [x] 좌표 변환 (KATEC → WGS84: mapx/mapy / 10000000)
+    - [x] 마커 클릭 시 인포윈도우
+      - [x] 관광지명
+      - [x] 간단한 설명
+      - [x] "상세보기" 버튼
+    - [x] 관광 타입별 마커 색상 구분 (선택 사항)
+  - [x] 지도-리스트 연동
+    - [x] 리스트 항목 클릭 → 지도 이동 및 마커 강조
+    - [x] 리스트 항목 호버 → 마커 강조 (선택 사항)
+    - [x] 마커 클릭 → 리스트 항목 강조
+  - [x] 지도 컨트롤
+    - [x] 줌 인/아웃 버튼
+    - [x] 지도 유형 선택 (일반/스카이뷰)
+    - [x] 현재 위치 버튼 (선택 사항)
+  - [x] 반응형 레이아웃
+    - [x] 데스크톱: 리스트(좌측 50%) + 지도(우측 50%) 분할
+    - [x] 모바일: 탭 형태로 리스트/지도 전환
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `app/layout.tsx`에 네이버 지도 API 스크립트 로드 추가 (Next.js Script 컴포넌트 사용)
+    - [x] `lib/utils/coordinate.ts` 생성 - KATEC 좌표를 WGS84로 변환하는 유틸리티 함수 구현
+    - [x] `components/tour-map-view.tsx` 생성 - 리스트와 지도를 통합하는 래퍼 컴포넌트 (선택된 관광지 상태 관리)
+    - [x] `components/tour-list.tsx` 수정 - 선택된 관광지 상태 연동 (selectedTourId, onTourSelect props 추가)
+    - [x] `components/tour-card.tsx` 수정 - 클릭 시 선택 상태 업데이트 (isSelected, onSelect props 추가)
+    - [x] `app/page.tsx` 수정 - TourList를 TourMapView로 교체하여 지도 영역 통합
+    - [x] shadcn/ui Tabs 컴포넌트 설치 - 모바일 탭 전환 UI용
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `components/naver-map.tsx` 관광 타입별 마커 색상 구분 구현 - 타입별 색상 매핑 상수 추가 (MARKER_COLOR_MAP), SVG 기반 커스텀 마커 아이콘 생성 함수 추가 (createMarkerIcon), 마커 생성 시 타입별 색상 적용
+    - [x] `components/tour-card.tsx` 호버 이벤트 추가 - onHover prop 추가, onMouseEnter/onMouseLeave 이벤트 핸들러 구현
+    - [x] `components/tour-list.tsx` 호버 상태 관리 추가 - hoveredTourId, onTourHover props 추가, TourCard에 onHover prop 전달
+    - [x] `components/tour-map-view.tsx` 호버 상태 관리 추가 - hoveredTourId 상태 추가, handleTourHover 핸들러 구현, TourList와 NaverMap에 hoveredTourId prop 전달
+    - [x] `components/naver-map.tsx` 호버된 마커 강조 로직 추가 - hoveredTourId prop 추가, hoverInfoWindowRef 추가, 호버 시 임시 인포윈도우 표시, cleanup 함수에 호버 인포윈도우 정리 추가
+    - [x] `components/naver-map.tsx` 현재 위치 버튼 구현 - Navigation 아이콘 추가, handleCurrentLocation 함수 구현 (Geolocation API 사용), 위치 권한 및 에러 처리, 지도 컨트롤 영역에 버튼 추가
+- [x] 페이지네이션
+  - [x] 무한 스크롤 구현
+    - [x] Intersection Observer 사용
+    - [x] 하단 로딩 인디케이터
+    - [x] 페이지당 20개 항목
+  - [x] 또는 페이지 번호 선택 방식 (무한 스크롤로 구현 완료)
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `app/api/tours/route.ts` 생성 - 클라이언트 사이드에서 사용할 API Route (getAreaBasedList, searchKeyword 래핑)
+    - [x] `hooks/use-infinite-tours.ts` 생성 - Intersection Observer를 사용한 무한 스크롤 훅 구현
+    - [x] `components/tour-list.tsx` 수정 - useInfiniteTours 훅 통합, Intersection Observer 타겟 추가, 하단 로딩 인디케이터 추가
+    - [x] `components/tour-map-view.tsx` 수정 - 무한 스크롤 지원을 위한 props 전달 (필터, 검색어, areaCode, contentTypeId 추가)
+    - [x] `app/page.tsx` 수정 - 초기 페이지 크기를 20개로 증가, TourMapView에 필터 정보 전달
+    - [x] `components/naver-map.tsx` 수정 - 새 페이지 로드 시 기존 마커 유지하면서 새 마커 추가, 필터 변경 시 마커 초기화
+    - [x] 필터/검색 변경 시 페이지네이션 자동 초기화 처리 (useInfiniteTours 훅에서 처리)
+    - [x] 중복 요청 방지 (isLoadingRef 사용)
+    - [x] 메모리 누수 방지 (Intersection Observer cleanup)
+    - [x] 접근성 개선 (aria-live, aria-label, aria-busy 추가)
+- [x] 최종 통합 및 스타일링
+  - [x] 모든 기능 통합 테스트
+  - [x] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [x] 로딩 상태 개선
+  - [x] 에러 처리 개선
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `lib/utils/coordinate.ts` 에러 처리 개선 - 좌표 값 검증, 유효성 검증, 한국 영역 검증 추가
+    - [x] `components/naver-map.tsx` 에러 상태 관리 추가 - useState로 에러 상태 저장, API 로드 실패 감지 (최대 10초 대기)
+    - [x] `components/naver-map.tsx` 좌표 변환 에러 처리 - try-catch로 좌표 변환 실패 시 기본 좌표 사용
+    - [x] `components/naver-map.tsx` 마커 생성 에러 처리 - 일부 마커 생성 실패해도 나머지 마커는 계속 생성, 에러 로깅
+    - [x] `components/naver-map.tsx` 로딩 상태 UI 개선 - 배경색 조정 (bg-background/80), backdrop-blur-sm 추가
+    - [x] `components/naver-map.tsx` 에러 메시지 표시 - 사용자 친화적인 메시지, 새로고침 버튼 제공
+    - [x] `components/naver-map.tsx` 인포윈도우 반응형 개선 - 모바일 250px, 데스크톱 300px, 폰트 크기 및 패딩 조정
+    - [x] `components/naver-map.tsx` 지도 컨트롤 스타일 개선 - 버튼 크기 확대 (h-11 w-11), 호버 효과, backdrop-blur 적용
+    - [x] `components/tour-map-view.tsx` 반응형 레이아웃 개선 - 최소 높이 보장 (모바일 400px, 데스크톱 600px)
+    - [x] `components/tour-card.tsx` 선택된 관광지 강조 개선 - ring-offset-2 추가로 시각적 강조 향상
+    - [x] `components/tour-list.tsx` 선택 상태 전환 애니메이션 - transition-all duration-200 추가
 
 ## Phase 3: 상세페이지 (`/places/[contentId]`)
 
