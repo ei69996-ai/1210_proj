@@ -1,11 +1,31 @@
+/**
+ * @file Navbar.tsx
+ * @description 네비게이션 바 컴포넌트
+ *
+ * 앱의 상단 네비게이션을 담당하는 컴포넌트입니다.
+ * 로고, 검색창, 메뉴 링크, 로그인/로그아웃 버튼을 포함합니다.
+ *
+ * 주요 기능:
+ * 1. 로고 클릭 시 홈으로 이동
+ * 2. 데스크톱/모바일 반응형 레이아웃
+ * 3. 검색창 연동 (TourSearch 컴포넌트)
+ * 4. Clerk 인증 연동 (로그인/로그아웃/프로필)
+ * 5. 네비게이션 링크 (홈, 통계, 북마크)
+ *
+ * @dependencies
+ * - @clerk/nextjs: 인증 컴포넌트 (SignedIn, SignedOut, SignInButton, UserButton)
+ * - components/tour-search: 검색창 컴포넌트
+ */
+
 "use client";
 
-import { SignedOut, SignInButton, SignedIn, UserButton } from "@clerk/nextjs";
+import { SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TourSearch } from "@/components/tour-search";
 
 const Navbar = () => {
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between gap-4 max-w-7xl mx-auto px-4">
@@ -18,13 +38,6 @@ const Navbar = () => {
         <div className="flex-1 max-w-md mx-4 hidden md:flex">
           <TourSearch placeholder="관광지 검색..." />
         </div>
-
-        {/* 모바일 검색 버튼 (선택 사항 - 향후 구현) */}
-        {/* <div className="md:hidden">
-          <Button variant="ghost" size="icon" aria-label="검색">
-            <Search className="h-5 w-5" />
-          </Button>
-        </div> */}
 
         {/* 네비게이션 링크 및 로그인 */}
         <div className="flex gap-4 items-center">
@@ -41,23 +54,19 @@ const Navbar = () => {
             >
               통계
             </Link>
-            <SignedIn>
-              <Link
-                href="/bookmarks"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                북마크
-              </Link>
-            </SignedIn>
+            <Link
+              href="/bookmarks"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              북마크
+            </Link>
           </nav>
           <SignedOut>
             <SignInButton mode="modal">
               <Button size="sm">로그인</Button>
             </SignInButton>
           </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          <UserButton />
         </div>
       </div>
     </header>

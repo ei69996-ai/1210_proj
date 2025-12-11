@@ -9,7 +9,6 @@
 "use client";
 
 import Link from "next/link";
-import { SignedIn } from "@clerk/nextjs";
 
 export function Footer() {
   return (
@@ -40,14 +39,12 @@ export function Footer() {
               >
                 통계
               </Link>
-              <SignedIn>
-                <Link
-                  href="/bookmarks"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  북마크
-                </Link>
-              </SignedIn>
+              <Link
+                href="/bookmarks"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                북마크
+              </Link>
             </nav>
           </div>
 

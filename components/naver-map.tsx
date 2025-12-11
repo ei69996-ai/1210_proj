@@ -370,7 +370,20 @@ export function NaverMap({
 
   // 마커 추가 함수 (기존 마커 유지하면서 새 마커만 추가)
   const addMarkers = (map: any, tourList: TourItem[]) => {
+    // window.naver 객체 유효성 검사 추가
+    if (typeof window === "undefined" || !window.naver || !window.naver.maps) {
+      console.warn("네이버 지도 API가 아직 로드되지 않았습니다.");
+      return;
+    }
+
     const { maps } = window.naver;
+    
+    // maps.event 객체 존재 여부 확인
+    if (!maps.event || typeof maps.event.addListener !== "function") {
+      console.warn("네이버 지도 API의 event 객체가 아직 준비되지 않았습니다.");
+      return;
+    }
+
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
     // 새 마커 생성
@@ -395,26 +408,30 @@ export function NaverMap({
           },
         });
 
-        // 마커 클릭 이벤트
-        maps.event.addListener(marker, "click", () => {
-          if (onTourSelect) {
-            onTourSelect(tour.contentid);
-          }
+        // 마커 클릭 이벤트 (maps.event가 존재하는지 다시 한 번 확인)
+        if (maps.event && typeof maps.event.addListener === "function") {
+          maps.event.addListener(marker, "click", () => {
+            if (onTourSelect) {
+              onTourSelect(tour.contentid);
+            }
 
-          // 인포윈도우 표시
-          if (infoWindowRef.current) {
-            infoWindowRef.current.close();
-          }
+            // 인포윈도우 표시
+            if (infoWindowRef.current) {
+              infoWindowRef.current.close();
+            }
 
-          const infoContent = createInfoWindowContent(tour);
-          const infoWindow = new maps.InfoWindow({
-            content: infoContent,
-            maxWidth: isMobile ? 250 : 300,
+            const infoContent = createInfoWindowContent(tour);
+            const infoWindow = new maps.InfoWindow({
+              content: infoContent,
+              maxWidth: isMobile ? 250 : 300,
+            });
+
+            infoWindowRef.current = infoWindow;
+            infoWindow.open(map, marker);
           });
-
-          infoWindowRef.current = infoWindow;
-          infoWindow.open(map, marker);
-        });
+        } else {
+          console.warn(`마커 클릭 이벤트를 등록할 수 없습니다 (contentId: ${tour.contentid})`);
+        }
 
         markersRef.current.push(marker);
         markerMapRef.current.set(tour.contentid, marker);
@@ -628,4 +645,3 @@ export function NaverMap({
     </div>
   );
 }
-

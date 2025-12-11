@@ -25,7 +25,7 @@ import { TourMapView } from "@/components/tour-map-view";
 import { TourFilters } from "@/components/tour-filters";
 import { Error } from "@/components/ui/error";
 import { batchGetPetTourInfo, filterPetFriendlyTours } from "@/lib/utils/pet-filter";
-import type { PetSizeOption } from "@/lib/types/filter";
+import type { PetSizeOption, SortOption } from "@/lib/types/filter";
 
 interface HomePageProps {
   searchParams: Promise<{
@@ -46,7 +46,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const contentTypeId = params.contentTypeId;
   const petFriendly = params.petFriendly === "true";
   const petSize = (params.petSize as PetSizeOption) || undefined;
-  const sort = params.sort || "latest";
+  const sort = (params.sort as SortOption) || "latest";
 
   // 지역 목록 조회 (필터 컴포넌트에 전달)
   let areas = [];
@@ -99,11 +99,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       // totalCount는 필터링 후 실제 개수로 업데이트 (정확하지 않을 수 있음)
       totalCount = filteredTours.length;
     }
-  } catch (err) {
-    error =
-      err instanceof Error
-        ? err.message
-        : "관광지 목록을 불러오는 중 오류가 발생했습니다.";
+  } catch (err: unknown) {
+    let errorMessage = "관광지 목록을 불러오는 중 오류가 발생했습니다.";
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    } else if (typeof err === "string") {
+      errorMessage = err;
+    }
+    error = errorMessage;
     console.error("관광지 목록 조회 실패:", err);
   }
 

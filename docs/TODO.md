@@ -290,102 +290,170 @@
 
 ## Phase 3: 상세페이지 (`/places/[contentId]`)
 
-- [ ] 페이지 기본 구조
-  - [ ] `app/places/[contentId]/page.tsx` 생성
-    - [ ] 동적 라우팅 설정
-    - [ ] 뒤로가기 버튼 (헤더)
-    - [ ] 기본 레이아웃 구조
-    - [ ] 라우팅 테스트
-- [ ] 기본 정보 섹션 (MVP 2.4.1)
-  - [ ] `components/tour-detail/detail-info.tsx` 생성
-    - [ ] `getDetailCommon()` API 연동
-    - [ ] 관광지명 (대제목)
-    - [ ] 대표 이미지 (크게 표시)
-    - [ ] 주소 표시 및 복사 기능
-      - [ ] 클립보드 API 사용
-      - [ ] 복사 완료 토스트
-    - [ ] 전화번호 (클릭 시 전화 연결)
-    - [ ] 홈페이지 (링크)
-    - [ ] 개요 (긴 설명문)
-    - [ ] 관광 타입 및 카테고리 뱃지
-    - [ ] 정보 없는 항목 숨김 처리
-- [ ] 운영 정보 섹션 (MVP 2.4.2)
-  - [ ] `components/tour-detail/detail-intro.tsx` 생성
-    - [ ] `getDetailIntro()` API 연동
-    - [ ] 운영시간/개장시간
-    - [ ] 휴무일
-    - [ ] 이용요금
-    - [ ] 주차 가능 여부
-    - [ ] 수용인원
-    - [ ] 체험 프로그램
-    - [ ] 유모차/반려동물 동반 가능 여부
-    - [ ] 정보 없는 항목 숨김 처리
-- [ ] 이미지 갤러리 (MVP 2.4.3)
-  - [ ] `components/tour-detail/detail-gallery.tsx` 생성
-    - [ ] `getDetailImage()` API 연동
-    - [ ] 대표 이미지 + 서브 이미지들
-    - [ ] 이미지 슬라이드 기능 (Swiper 또는 캐러셀)
-    - [ ] 이미지 클릭 시 전체화면 모달
-    - [ ] 이미지 없으면 기본 이미지
-    - [ ] Next.js Image 컴포넌트 사용 (최적화)
-- [ ] 지도 섹션 (MVP 2.4.4)
-  - [ ] `components/tour-detail/detail-map.tsx` 생성
-    - [ ] 해당 관광지 위치 표시
-    - [ ] 마커 1개 표시
-    - [ ] "길찾기" 버튼
-      - [ ] 네이버 지도 앱/웹 연동
-      - [ ] URL: `https://map.naver.com/v5/directions/{좌표}`
-    - [ ] 좌표 정보 표시 (선택 사항)
-- [ ] 공유 기능 (MVP 2.4.5)
-  - [ ] `components/tour-detail/share-button.tsx` 생성
-    - [ ] URL 복사 기능
-      - [ ] `navigator.clipboard.writeText()` 사용
-      - [ ] HTTPS 환경 확인
-    - [ ] 복사 완료 토스트 메시지
-    - [ ] 공유 아이콘 버튼 (Share/Link 아이콘)
-  - [ ] Open Graph 메타태그
-    - [ ] `app/places/[contentId]/page.tsx`에 Metadata 생성
-    - [ ] `og:title` - 관광지명
-    - [ ] `og:description` - 관광지 설명 (100자 이내)
-    - [ ] `og:image` - 대표 이미지 (1200x630 권장)
-    - [ ] `og:url` - 상세페이지 URL
-    - [ ] `og:type` - "website"
-- [ ] 북마크 기능 (MVP 2.4.5)
-  - [ ] `components/bookmarks/bookmark-button.tsx` 생성
-    - [ ] 별 아이콘 (채워짐/비어있음)
-    - [ ] 북마크 상태 확인 (Supabase 조회)
-    - [ ] 북마크 추가/제거 기능
-    - [ ] 인증된 사용자 확인 (Clerk)
-    - [ ] 로그인하지 않은 경우: 로그인 유도 또는 localStorage 임시 저장
-  - [ ] Supabase 연동
-    - [ ] `lib/api/supabase-api.ts` 생성
-      - [ ] `getBookmark()` - 북마크 조회
-      - [ ] `addBookmark()` - 북마크 추가
-      - [ ] `removeBookmark()` - 북마크 제거
-      - [ ] `getUserBookmarks()` - 사용자 북마크 목록
-    - [ ] `bookmarks` 테이블 사용 (db.sql 참고)
-      - [ ] `user_id` (users 테이블 참조)
-      - [ ] `content_id` (한국관광공사 API contentid)
-      - [ ] UNIQUE 제약 (user_id, content_id)
-  - [ ] 상세페이지에 북마크 버튼 추가
-- [ ] 반려동물 정보 섹션 (MVP 2.5)
-  - [ ] `components/tour-detail/detail-pet-tour.tsx` 생성
-    - [ ] `getDetailPetTour()` API 연동
-    - [ ] 반려동물 동반 가능 여부 표시
-    - [ ] 반려동물 크기 제한 정보
-    - [ ] 반려동물 입장 가능 장소 (실내/실외)
-    - [ ] 반려동물 동반 추가 요금
-    - [ ] 반려동물 전용 시설 정보
-    - [ ] 아이콘 및 뱃지 디자인 (🐾)
-    - [ ] 주의사항 강조 표시
-- [ ] 추천 관광지 섹션 (선택 사항)
-  - [ ] 같은 지역 또는 타입의 다른 관광지 추천
-  - [ ] 카드 형태로 표시
-- [ ] 최종 통합 및 스타일링
-  - [ ] 모든 섹션 통합
-  - [ ] 반응형 디자인 확인
-  - [ ] 모바일 최적화
-  - [ ] 접근성 확인 (ARIA 라벨, 키보드 네비게이션)
+- [x] 페이지 기본 구조
+  - [x] `app/places/[contentId]/page.tsx` 생성
+    - [x] 동적 라우팅 설정
+    - [x] 뒤로가기 버튼 (헤더)
+    - [x] 기본 레이아웃 구조
+    - [x] 라우팅 테스트
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `app/places/[contentId]/page.tsx` 생성 - Next.js 15 동적 라우팅 설정, params Promise 처리
+    - [x] 뒤로가기 버튼 구현 - Link 컴포넌트 사용 (Server Component), ArrowLeft 아이콘, 접근성 개선 (aria-label, focus-visible)
+    - [x] 기본 레이아웃 구조 설정 - 헤더 영역(뒤로가기 버튼), 메인 컨텐츠 영역(placeholder), 반응형 컨테이너 (max-w-4xl, 모바일/데스크톱 패딩)
+    - [x] contentId 유효성 검증 - 숫자만 허용하는 정규식 검증, 잘못된 ID 처리
+    - [x] 라우팅 테스트 - TourCard의 `/places/${tour.contentid}` 링크와 연동 확인
+- [x] 기본 정보 섹션 (MVP 2.4.1)
+  - [x] `components/tour-detail/detail-info.tsx` 생성
+    - [x] `getDetailCommon()` API 연동
+    - [x] 관광지명 (대제목)
+    - [x] 대표 이미지 (크게 표시)
+    - [x] 주소 표시 및 복사 기능
+      - [x] 클립보드 API 사용
+      - [x] 복사 완료 토스트
+    - [x] 전화번호 (클릭 시 전화 연결)
+    - [x] 홈페이지 (링크)
+    - [x] 개요 (긴 설명문)
+    - [x] 관광 타입 및 카테고리 뱃지
+    - [x] 정보 없는 항목 숨김 처리
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `components/tour-detail/detail-info.tsx` 컴포넌트 생성 - Client Component로 구현 (주소 복사 기능 포함), 관광지명(h1), 대표 이미지(Next.js Image, aspect-video), 주소 복사 버튼(sonner toast 알림), 전화번호(tel: 링크), 홈페이지(외부 링크), 개요(whitespace-pre-line), 관광 타입 뱃지(TOUR_TYPE_MAP 사용)
+    - [x] `app/places/[contentId]/page.tsx` 수정 - getDetailCommon() API 호출 추가, DetailInfo 컴포넌트 통합, 에러 처리 개선(Error 컴포넌트 사용), contentId 유효성 검증 유지
+    - [x] 이미지 에러 처리 개선 - useState로 imageError 상태 관리, 이미지 로드 실패 시 플레이스홀더 표시, 이미지 없을 때 플레이스홀더 표시
+    - [x] 반응형 디자인 적용 - 모바일/태블릿/데스크톱 레이아웃(flex-col/flex-row), 카드 스타일(border, rounded-lg, padding), 간격 조정(space-y-4, space-y-6)
+    - [x] 접근성 개선 - ARIA 라벨 추가(aria-label, aria-hidden), 키보드 네비게이션 지원(focus-visible:ring-2), 포커스 스타일 적용
+- [x] 운영 정보 섹션 (MVP 2.4.2)
+  - [x] `components/tour-detail/detail-intro.tsx` 생성
+    - [x] `getDetailIntro()` API 연동
+    - [x] 운영시간/개장시간
+    - [x] 휴무일
+    - [x] 이용요금
+    - [x] 주차 가능 여부
+    - [x] 문의처
+    - [x] 체험 프로그램 (관광지)
+    - [x] 반려동물 동반 가능 여부
+    - [x] 정보 없는 항목 숨김 처리
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `components/tour-detail/detail-intro.tsx` 컴포넌트 생성 - TourIntro 타입 props, 타입별 필드 처리(관광지, 문화시설, 축제, 레포츠, 숙박, 음식점), 아이콘 사용(lucide-react), 카드 스타일 레이아웃, 그리드 레이아웃(모바일 1열/데스크톱 2열), 정보 없는 항목 숨김 처리
+    - [x] `app/places/[contentId]/page.tsx` 수정 - getDetailIntro() API 호출 추가, DetailIntro 컴포넌트 통합, 에러 처리(운영 정보가 없어도 페이지 정상 표시), 섹션 간 간격 조정(space-y-8)
+    - [x] 타입별 필드 매핑 로직 구현 - contentTypeId에 따라 표시할 필드 결정, 공통 필드와 타입별 필드 그룹핑, 행사기간(시작일~종료일) 포맷팅
+    - [x] UI/UX 개선 - 아이콘+라벨+값 형태, 그리드 레이아웃, 행사홈페이지 링크 처리, 빈 상태 처리(운영 정보가 전혀 없으면 섹션 숨김)
+    - [x] 접근성 개선 - ARIA 라벨 추가, 키보드 네비게이션 지원, 스크린 리더 대응
+- [x] 이미지 갤러리 (MVP 2.4.3)
+  - [x] `components/tour-detail/detail-gallery.tsx` 생성
+    - [x] `getDetailImage()` API 연동
+    - [x] 대표 이미지 + 서브 이미지들
+    - [x] 이미지 슬라이드 기능 (Swiper 또는 캐러셀)
+    - [x] 이미지 클릭 시 전체화면 모달
+    - [x] 이미지 없으면 기본 이미지
+    - [x] Next.js Image 컴포넌트 사용 (최적화)
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] Swiper 라이브러리 설치 및 설정 - `pnpm add swiper` 실행, Navigation/Pagination/Keyboard 모듈 사용
+    - [x] `components/tour-detail/detail-gallery.tsx` 컴포넌트 생성 - Client Component로 구현, TourImage[] 타입 props, 이미지 로딩/에러 상태 관리
+    - [x] Swiper 슬라이드 기능 구현 - 메인 갤러리 Swiper, 썸네일 그리드 (최대 8개 표시), 커스텀 네비게이션 버튼
+    - [x] 전체화면 모달 구현 - shadcn/ui Dialog 컴포넌트 사용, 모달 내 Swiper 슬라이드, 이미지 인덱스 표시
+    - [x] 키보드 네비게이션 지원 - ESC로 모달 닫기, 화살표 키로 이미지 이동, Enter/Space로 이미지 클릭
+    - [x] `app/places/[contentId]/page.tsx` 수정 - getDetailImage() API 호출 추가, DetailGallery 컴포넌트 통합, 에러 처리 (이미지 없어도 페이지 정상 표시)
+    - [x] 반응형 디자인 적용 - 모바일/태블릿/데스크톱 레이아웃, 썸네일 그리드 반응형 (모바일 4열, 태블릿 6열, 데스크톱 8열)
+    - [x] 접근성 개선 - ARIA 라벨 추가 (aria-label, aria-hidden), 키보드 네비게이션 지원, 스크린 리더 대응
+    - [x] 모달 열릴 때 body 스크롤 막기 - useEffect로 모달 상태에 따라 body overflow 제어
+    - [x] 이미지 인덱스 동기화 - 모달 내 Swiper의 slideChange 이벤트로 selectedIndex 업데이트
+- [x] 지도 섹션 (MVP 2.4.4)
+  - [x] `components/tour-detail/detail-map.tsx` 생성
+    - [x] 해당 관광지 위치 표시
+    - [x] 마커 1개 표시
+    - [x] "길찾기" 버튼
+      - [x] 네이버 지도 앱/웹 연동
+      - [x] URL: `https://map.naver.com/v5/directions/{좌표}`
+    - [x] 좌표 정보 표시 (선택 사항)
+  - [x] `app/places/[contentId]/page.tsx` 수정
+    - [x] DetailMap 컴포넌트 import 및 통합
+    - [x] 좌표 유효성 검증 (mapx, mapy 확인)
+    - [x] 섹션 배치 (DetailInfo → DetailGallery → DetailMap → DetailIntro)
+- [x] 공유 기능 (MVP 2.4.5)
+  - [x] `components/tour-detail/share-button.tsx` 생성
+    - [x] URL 복사 기능
+      - [x] `navigator.clipboard.writeText()` 사용
+      - [x] HTTPS 환경 확인
+    - [x] 복사 완료 토스트 메시지
+    - [x] 공유 아이콘 버튼 (Share/Link 아이콘)
+  - [x] Open Graph 메타태그
+    - [x] `app/places/[contentId]/page.tsx`에 Metadata 생성
+    - [x] `og:title` - 관광지명
+    - [x] `og:description` - 관광지 설명 (100자 이내)
+    - [x] `og:image` - 대표 이미지 (1200x630 권장)
+    - [x] `og:url` - 상세페이지 URL
+    - [x] `og:type` - "website"
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `components/tour-detail/share-button.tsx` 컴포넌트 생성 - Client Component로 구현, usePathname 훅으로 현재 경로 가져오기, navigator.clipboard.writeText() 사용, 클립보드 API 미지원 시 대체 방법 구현 (document.execCommand), 복사 상태 관리 (useState), toast 알림 (sonner), Share2/Check 아이콘 사용
+    - [x] `app/places/[contentId]/page.tsx`에 generateMetadata 함수 추가 - Next.js Metadata API 사용, getDetailCommon() API 호출하여 관광지 정보 조회, Open Graph 메타태그 동적 생성 (og:title, og:description, og:image, og:url, og:type), Twitter Card 메타태그 추가, description 100자 제한 및 HTML 태그 제거, 이미지 URL 절대 경로 변환, 에러 처리 (메타태그 생성 실패 시 기본값 반환)
+    - [x] `app/places/[contentId]/page.tsx`에 ShareButton 통합 - 헤더 영역에 공유 버튼 추가 (뒤로가기 버튼 옆), flex 레이아웃으로 배치, ShareButton 컴포넌트 import
+- [x] 북마크 기능 (MVP 2.4.5)
+  - [x] `components/bookmarks/bookmark-button.tsx` 생성
+    - [x] 별 아이콘 (채워짐/비어있음)
+    - [x] 북마크 상태 확인 (Supabase 조회)
+    - [x] 북마크 추가/제거 기능
+    - [x] 인증된 사용자 확인 (Clerk)
+    - [x] 로그인하지 않은 경우: 로그인 유도
+  - [x] Supabase 연동
+    - [x] `lib/api/supabase-api.ts` 생성
+      - [x] `getBookmark()` - 북마크 조회
+      - [x] `addBookmark()` - 북마크 추가
+      - [x] `removeBookmark()` - 북마크 제거
+      - [x] `getUserBookmarks()` - 사용자 북마크 목록
+    - [x] `bookmarks` 테이블 사용 (db.sql 참고)
+      - [x] `user_id` (users 테이블 참조)
+      - [x] `content_id` (한국관광공사 API contentid)
+      - [x] UNIQUE 제약 (user_id, content_id)
+  - [x] 상세페이지에 북마크 버튼 추가
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `lib/api/supabase-api.ts`에 `getSupabaseUserId()` 헬퍼 함수 추가 - Clerk userId를 Supabase user_id(UUID)로 변환하는 로직 구현
+    - [x] `components/bookmarks/bookmark-button.tsx` 로딩 상태 개선 - 초기 북마크 상태 확인 중 스피너 표시, 북마크 처리 중 로딩 상태 표시
+    - [x] `components/bookmarks/bookmark-button.tsx` 에러 처리 개선 - 사용자 동기화 관련 에러 메시지 개선, 네트워크 에러 처리
+    - [x] `components/bookmarks/bookmark-button.tsx` 접근성 개선 - ARIA 라벨 추가 (aria-label, aria-pressed, aria-busy), 스크린 리더 대응 (sr-only 클래스)
+    - [x] `app/places/[contentId]/page.tsx` 북마크 버튼 통합 - 헤더 영역에 북마크 버튼 추가 (ShareButton 옆에 배치), 액션 버튼 그룹으로 레이아웃 개선
+- [x] 반려동물 정보 섹션 (MVP 2.5)
+  - [x] `components/tour-detail/detail-pet-tour.tsx` 생성
+    - [x] `getDetailPetTour()` API 연동
+    - [x] 반려동물 동반 가능 여부 표시
+    - [x] 반려동물 크기 제한 정보
+    - [x] 반려동물 입장 가능 장소 (실내/실외)
+    - [x] 반려동물 동반 추가 요금
+    - [x] 반려동물 전용 시설 정보
+    - [x] 아이콘 및 뱃지 디자인 (🐾)
+    - [x] 주의사항 강조 표시
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `components/tour-detail/detail-pet-tour.tsx` 컴포넌트 구현 - Client Component로 구현, PetTourInfo 타입 props, 반려동물 동반 가능 여부(chkpetleash === "Y") 확인, 크기 제한 뱃지(PetSizeBadge), 입장 가능 장소 아이콘(PetPlaceIcon), 추가 요금 표시, 주의사항 강조 박스(petinfo), 반응형 그리드 레이아웃(모바일 1열/데스크톱 2열), 정보 없는 항목 숨김 처리
+    - [x] `app/places/[contentId]/page.tsx` 반려동물 정보 API 호출 추가 - getDetailPetTour() API 호출, 에러 처리(정보 없어도 페이지 정상 표시), DetailPetTour 컴포넌트 통합, 섹션 배치 순서 조정(DetailInfo → DetailGallery → DetailMap → DetailPetTour → DetailIntro)
+- [x] 추천 관광지 섹션 (선택 사항)
+  - [x] 같은 지역 또는 타입의 다른 관광지 추천
+  - [x] 카드 형태로 표시
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `components/tour-detail/detail-recommendations.tsx` 컴포넌트 생성 - Server Component로 구현, 같은 지역(areacode) + 같은 타입(contenttypeid)의 관광지 조회, 현재 관광지 제외, 최대 6개 표시, TourCard 컴포넌트 재사용, 반응형 그리드 레이아웃 (모바일 1열, 태블릿 2열, 데스크톱 3열), 섹션 제목 "이런 관광지는 어떠세요?", 접근성 개선 (ARIA 라벨, role="region")
+    - [x] `lib/types/tour.ts` TourDetail 타입에 areacode 필드 추가 - detailCommon2 API 응답에 포함될 수 있는 지역 코드 필드 추가 (optional)
+    - [x] `app/places/[contentId]/page.tsx` 추천 관광지 섹션 통합 - DetailRecommendations 컴포넌트 import 및 통합, 섹션 배치 (DetailIntro 다음), 지역 코드가 있는 경우에만 표시, 에러 처리 (추천 관광지 조회 실패 시에도 페이지 정상 표시)
+- [x] 최종 통합 및 스타일링
+  - [x] 모든 섹션 통합
+  - [x] 반응형 디자인 확인
+  - [x] 모바일 최적화
+  - [x] 접근성 확인 (ARIA 라벨, 키보드 네비게이션)
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `app/places/[contentId]/page.tsx` 페이지 레벨 통합 개선 - 섹션 간 간격 일관성 조정 (space-y-8 md:space-y-10), 헤더 영역 모바일 최적화 (뒤로가기 버튼 크기 조정, 최소 터치 영역 44px), 컨테이너 패딩 개선 (lg:px-8 lg:py-10), 모든 섹션에 role="region" 및 aria-labelledby 추가, main 태그에 role="main" 및 aria-label 추가
+    - [x] `components/tour-detail/detail-info.tsx` 반응형 및 접근성 개선 - 섹션 제목에 id="detail-info-heading" 추가, 카드 패딩 반응형 조정 (p-4 sm:p-6), 버튼 최소 터치 영역 44px 추가, 링크 요소 최소 터치 영역 44px 추가
+    - [x] `components/tour-detail/detail-gallery.tsx` 모바일 최적화 - 섹션 제목에 id="detail-gallery-heading" 추가, 썸네일 그리드 모바일에서 4열 → 3열로 조정 (grid-cols-3 sm:grid-cols-4), Swiper 네비게이션 버튼 최소 터치 영역 44px 추가, 모달 닫기 버튼 및 네비게이션 버튼 모바일 최적화
+    - [x] `components/tour-detail/detail-map.tsx` 모바일 최적화 - 섹션 제목에 id="detail-map-heading" 추가, 지도 높이 모바일에서 400px → 300px로 조정 (h-[300px] sm:h-[400px]), 길찾기 버튼 및 좌표 토글 버튼 최소 터치 영역 44px 추가
+    - [x] `components/tour-detail/detail-intro.tsx` 스타일링 일관성 개선 - 섹션 제목에 id="detail-intro-heading" 추가, 섹션 제목 크기 통일 (text-2xl), 카드 패딩 반응형 조정 (p-4 sm:p-6), 링크 요소 최소 터치 영역 44px 추가
+    - [x] `components/tour-detail/detail-pet-tour.tsx` 스타일링 일관성 개선 - 섹션 제목에 id="detail-pet-tour-heading" 추가, 섹션 제목 크기 통일 (text-2xl), 카드 패딩 반응형 조정 (p-4 sm:p-6)
+    - [x] `components/tour-detail/share-button.tsx` 모바일 최적화 - 버튼 최소 터치 영역 44px 추가 (min-h-[44px] sm:min-h-[36px])
+    - [x] `components/bookmarks/bookmark-button.tsx` 모바일 최적화 - 버튼 최소 터치 영역 44px 추가 (min-h-[44px] sm:min-h-[36px])
 
 ## Phase 4: 통계 대시보드 페이지 (`/stats`)
 

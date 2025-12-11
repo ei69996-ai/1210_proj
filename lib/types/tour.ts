@@ -44,6 +44,7 @@ export interface TourDetail {
   firstimage2?: string; // 대표이미지2
   mapx: string; // 경도 (KATEC 좌표계, 정수형)
   mapy: string; // 위도 (KATEC 좌표계, 정수형)
+  areacode?: string; // 지역코드 (areacodeYN: "Y"일 때 포함)
 }
 
 /**

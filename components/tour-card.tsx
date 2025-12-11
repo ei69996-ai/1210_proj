@@ -112,7 +112,10 @@ export function TourCard({ tour, isSelected = false, onSelect, onHover, petInfo 
         }`}
       >
         {/* 썸네일 이미지 */}
-        <div className="relative h-48 w-full overflow-hidden rounded-t-lg bg-muted">
+        <div 
+          className="relative h-48 w-full overflow-hidden rounded-t-lg bg-muted"
+          suppressHydrationWarning
+        >
           {imageUrl && !imageError ? (
             <Image
               src={imageUrl}
