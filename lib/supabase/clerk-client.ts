@@ -39,6 +39,7 @@ export function useClerkSupabaseClient() {
 
     return createClient(supabaseUrl, supabaseKey, {
       async accessToken() {
+        if (typeof getToken !== "function") return null;
         return (await getToken()) ?? null;
       },
     });
