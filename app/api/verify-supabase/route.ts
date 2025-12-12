@@ -11,6 +11,7 @@
 
 import { getServiceRoleClient } from "@/lib/supabase/service-role";
 import { NextResponse } from "next/server";
+import { createErrorResponse, logError } from "@/lib/utils/error-handler";
 
 interface VerificationResult {
   name: string;
@@ -400,10 +401,17 @@ export async function GET() {
       results: allResults,
     });
   } catch (error) {
+    logError(error, "app/api/verify-supabase/route.ts");
+    const errorResponse = createErrorResponse(
+      error instanceof Error
+        ? error
+        : new Error("검증 중 오류가 발생했습니다. 환경변수를 확인하세요."),
+      500
+    );
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        ...errorResponse,
         message: "검증 중 오류가 발생했습니다. 환경변수를 확인하세요.",
       },
       { status: 500 }

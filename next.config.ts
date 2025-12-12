@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    qualities: [25, 50, 75, 85], // 필요한 값들만 넣기
     remotePatterns: [
       { 
         protocol: "https",
@@ -29,4 +30,20 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// 번들 분석 도구 설정 (개발 환경에서만 사용)
+// @next/bundle-analyzer는 선택적 의존성으로 설치 필요
+let config = nextConfig;
+
+if (process.env.ANALYZE === "true") {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const withBundleAnalyzer = require("@next/bundle-analyzer")({
+      enabled: true,
+    });
+    config = withBundleAnalyzer(nextConfig);
+  } catch (error) {
+    console.warn("@next/bundle-analyzer가 설치되지 않았습니다. 'pnpm add -D @next/bundle-analyzer'를 실행하세요.");
+  }
+}
+
+export default config;

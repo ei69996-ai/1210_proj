@@ -11,6 +11,11 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getAreaBasedList, searchKeyword } from "@/lib/api/tour-api";
+import { createErrorResponse, logError } from "@/lib/utils/error-handler";
+
+// API Route 캐싱 설정
+// 관광지 목록: 30분, 검색 결과: 10분
+export const revalidate = 600; // 10분 (검색 결과 기준)
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,17 +28,19 @@ export async function GET(request: NextRequest) {
 
     // 검증
     if (numOfRows < 1 || numOfRows > 100) {
-      return NextResponse.json(
-        { error: "numOfRows는 1 이상 100 이하여야 합니다." },
-        { status: 400 }
+      const errorResponse = createErrorResponse(
+        new Error("numOfRows는 1 이상 100 이하여야 합니다."),
+        400
       );
+      return NextResponse.json(errorResponse, { status: 400 });
     }
 
     if (pageNo < 1) {
-      return NextResponse.json(
-        { error: "pageNo는 1 이상이어야 합니다." },
-        { status: 400 }
+      const errorResponse = createErrorResponse(
+        new Error("pageNo는 1 이상이어야 합니다."),
+        400
       );
+      return NextResponse.json(errorResponse, { status: 400 });
     }
 
     let result;
@@ -60,16 +67,14 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("관광지 목록 API 에러:", error);
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "관광지 목록을 불러오는 중 오류가 발생했습니다.",
-      },
-      { status: 500 }
+    logError(error, "app/api/tours/route.ts");
+    const errorResponse = createErrorResponse(
+      error instanceof Error
+        ? error
+        : new Error("관광지 목록을 불러오는 중 오류가 발생했습니다."),
+      500
     );
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }
 

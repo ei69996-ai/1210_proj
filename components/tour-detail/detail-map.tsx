@@ -26,62 +26,7 @@ import { Loading } from "@/components/ui/loading";
 import { Button } from "@/components/ui/button";
 import { Navigation, Eye, EyeOff } from "lucide-react";
 
-// 네이버 지도 API 타입 정의
-declare global {
-  interface Window {
-    naver: {
-      maps: {
-        Map: new (element: HTMLElement, options: {
-          center: any;
-          zoom: number;
-        }) => {
-          setCenter: (center: any) => void;
-          setZoom: (zoom: number) => void;
-          getCenter: () => { lat: () => number; lng: () => number };
-          getZoom: () => number;
-        };
-        Marker: new (options: {
-          position: any;
-          map: any;
-          title?: string;
-          icon?: {
-            content: string;
-            size?: { width: number; height: number };
-            anchor?: { x: number; y: number };
-          };
-        }) => {
-          setMap: (map: any) => void;
-          setPosition: (position: any) => void;
-          getTitle: () => string;
-        };
-        InfoWindow: new (options: {
-          content: string;
-          maxWidth?: number;
-        }) => {
-          open: (map: any, marker: any) => void;
-          close: () => void;
-          setContent: (content: string) => void;
-        };
-        LatLng: new (lat: number, lng: number) => {
-          lat: () => number;
-          lng: () => number;
-        };
-        Size: new (width: number, height: number) => {
-          width: number;
-          height: number;
-        };
-        Point: new (x: number, y: number) => {
-          x: number;
-          y: number;
-        };
-        event: {
-          addListener: (target: any, event: string, handler: () => void) => void;
-          removeListener: (target: any, event: string, handler: () => void) => void;
-        };
-      };
-    };
-  }
-}
+// 네이버 지도 API 타입은 components/naver-map.tsx에서 선언됨
 
 interface DetailMapProps {
   /** 관광지 상세 정보 */

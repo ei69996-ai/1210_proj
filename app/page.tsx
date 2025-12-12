@@ -38,6 +38,10 @@ interface HomePageProps {
   }>;
 }
 
+// 페이지 레벨 캐싱 설정
+// 지역 목록: 1시간, 관광지 목록: 30분, 검색 결과: 10분
+export const revalidate = 600; // 10분 (검색 결과 기준, 가장 짧은 캐시 시간)
+
 export default async function HomePage({ searchParams }: HomePageProps) {
   // URL 쿼리 파라미터 읽기 (Next.js 15는 Promise)
   const params = await searchParams;
@@ -102,7 +106,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   } catch (err: unknown) {
     let errorMessage = "관광지 목록을 불러오는 중 오류가 발생했습니다.";
     if (err instanceof Error) {
-      errorMessage = err.message;
+      errorMessage = (err as Error).message;
     } else if (typeof err === "string") {
       errorMessage = err;
     }

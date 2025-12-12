@@ -143,11 +143,11 @@ export function BookmarkList() {
 
         const bookmarksWithTours = await Promise.all(tourPromises);
         setBookmarks(bookmarksWithTours);
-      } catch (err) {
+      } catch (err: unknown) {
         console.error("북마크 목록 조회 실패:", err);
         setError(
           err instanceof Error
-            ? err.message
+            ? (err as Error).message
             : "북마크 목록을 불러오는 중 오류가 발생했습니다."
         );
       } finally {
@@ -283,11 +283,11 @@ export function BookmarkList() {
 
       setDeleteDialogOpen(false);
       setDeleteTarget(null);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("북마크 삭제 실패:", err);
       toast.error(
         err instanceof Error
-          ? err.message
+          ? (err as Error).message
           : "북마크 삭제 중 오류가 발생했습니다."
       );
     } finally {

@@ -65,3 +65,5 @@ repomix-output.xml
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+.vercel

@@ -19,10 +19,14 @@
 
 "use client";
 
+import { Suspense, lazy } from "react";
 import { SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TourSearch } from "@/components/tour-search";
+
+// ThemeToggle을 동적 import로 로드 (클라이언트 사이드에서만)
+const ThemeToggle = lazy(() => import("@/components/theme-toggle").then((mod) => ({ default: mod.ThemeToggle })));
 
 const Navbar = () => {
 
@@ -36,7 +40,9 @@ const Navbar = () => {
 
         {/* 검색창 (중앙) - 데스크톱에서만 표시 */}
         <div className="flex-1 max-w-md mx-4 hidden md:flex">
-          <TourSearch placeholder="관광지 검색..." />
+          <Suspense fallback={<div className="w-full h-10 bg-muted rounded-md animate-pulse" />}>
+            <TourSearch placeholder="관광지 검색..." />
+          </Suspense>
         </div>
 
         {/* 네비게이션 링크 및 로그인 */}
@@ -61,6 +67,9 @@ const Navbar = () => {
               북마크
             </Link>
           </nav>
+          <Suspense fallback={<div className="h-9 w-9" />}>
+            <ThemeToggle />
+          </Suspense>
           <SignedOut>
             <SignInButton mode="modal">
               <Button size="sm">로그인</Button>

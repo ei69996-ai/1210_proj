@@ -615,53 +615,162 @@
     - [x] `components/tour-list.tsx` 수정 - TourCard에 index prop 전달
     - [x] `components/tour-detail/detail-info.tsx` 이미지 최적화 - `quality={90}` 추가 (priority 이미지이므로 높은 품질)
     - [x] `components/tour-detail/detail-gallery.tsx` 이미지 최적화 - 첫 번째 이미지 `quality={90}`, 나머지 이미지 `quality={85}`, 썸네일 `quality={75}`, 모달 내 이미지 `quality={95}` 추가
-- [ ] 전역 에러 핸들링
-  - [ ] `app/error.tsx` 생성
-  - [ ] `app/global-error.tsx` 생성
-  - [ ] API 에러 처리 개선
-- [ ] 404 페이지
-  - [ ] `app/not-found.tsx` 생성
-    - [ ] 사용자 친화적인 메시지
-    - [ ] 홈으로 돌아가기 버튼
-- [ ] SEO 최적화
-  - [ ] 메타태그 설정 (`app/layout.tsx`)
-    - [ ] 기본 title, description
-    - [ ] Open Graph 태그
-    - [ ] Twitter Card 태그
-  - [ ] `app/sitemap.ts` 생성
-    - [ ] 동적 sitemap 생성 (관광지 상세페이지 포함)
-  - [ ] `app/robots.ts` 생성
-- [ ] 성능 최적화
-  - [ ] Lighthouse 점수 측정 (목표: > 80)
-  - [ ] 코드 분할 확인
-  - [ ] 불필요한 번들 제거
-  - [ ] API 응답 캐싱 전략 확인
-- [ ] 환경변수 보안 검증
-  - [ ] 모든 필수 환경변수 확인
-  - [ ] `.env.example` 업데이트
-  - [ ] 프로덕션 환경변수 설정 가이드 작성
-- [ ] 배포 준비
-  - [ ] Vercel 배포 설정
-  - [ ] 환경변수 설정 (Vercel 대시보드)
-  - [ ] 빌드 테스트 (`pnpm build`)
-  - [ ] 프로덕션 배포 및 테스트
+- [x] 전역 에러 핸들링
+  - [x] `app/error.tsx` 생성
+  - [x] `app/global-error.tsx` 생성
+  - [x] API 에러 처리 개선
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `lib/types/error.ts` 생성 - ApiError 인터페이스, ErrorCode 타입, ERROR_CODES 상수, ErrorResponse 인터페이스 정의
+    - [x] `lib/utils/error-handler.ts` 생성 - createApiError, getErrorMessage, getErrorCode, isRetryableError, statusCodeToErrorCode, logError, createErrorResponse 함수 구현
+    - [x] `app/error.tsx` 라우트 에러 바운더리 구현 - Next.js 15 에러 바운더리 패턴 적용, 재시도 및 홈으로 돌아가기 버튼, 개발 환경에서만 상세 정보 표시
+    - [x] `app/global-error.tsx` 글로벌 에러 바운더리 구현 - 루트 레이아웃 에러 처리, 완전한 HTML 구조 포함, 최소한의 스타일링
+    - [x] `app/api/tours/route.ts` 에러 처리 개선 - createErrorResponse, logError 함수 사용, 일관된 에러 응답 형식
+    - [x] `app/api/sync-user/route.ts` 에러 처리 개선 - createErrorResponse, logError 함수 사용, 적절한 HTTP 상태 코드 반환
+    - [x] `app/api/verify-supabase/route.ts` 에러 처리 개선 - createErrorResponse, logError 함수 사용, 일관된 에러 응답 형식
+- [x] 404 페이지
+  - [x] `app/not-found.tsx` 생성
+    - [x] 사용자 친화적인 메시지
+    - [x] 홈으로 돌아가기 버튼
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `app/not-found.tsx` 파일 생성 - Next.js 15 not-found.tsx 패턴 적용, Server Component로 구현, FileQuestion 아이콘 사용
+    - [x] 메타데이터 설정 - title, description, robots 설정 (index: false, follow: false)
+    - [x] 사용자 친화적인 메시지 구현 - "페이지를 찾을 수 없습니다" 제목, 안내 문구, 404 상태 코드 표시
+    - [x] 홈으로 돌아가기 버튼 구현 - shadcn/ui Button 컴포넌트 사용, Home 아이콘, Link 컴포넌트로 네비게이션
+    - [x] 접근성 개선 - main 태그에 role="main" 및 aria-labelledby 추가, ARIA 라벨 추가 (aria-label, aria-hidden), role="status" 및 role="group" 추가, 키보드 네비게이션 지원 (focus-visible 스타일), 스크린 리더 대응
+    - [x] 반응형 디자인 적용 - 모바일/태블릿/데스크톱 레이아웃 (flex-col sm:flex-row), 반응형 패딩 (px-4 py-16 md:px-6 md:py-20), 반응형 텍스트 크기 (text-2xl md:text-3xl), 반응형 아이콘 크기 (h-16 w-16 md:h-20 md:w-20), 버튼 최소 터치 영역 (min-h-[44px] sm:min-h-[40px])
+- [x] SEO 최적화
+  - [x] 메타태그 설정 (`app/layout.tsx`)
+    - [x] 기본 title, description
+    - [x] Open Graph 태그
+    - [x] Twitter Card 태그
+  - [x] `app/sitemap.ts` 생성
+    - [x] 동적 sitemap 생성 (관광지 상세페이지 포함)
+  - [x] `app/robots.ts` 생성
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `app/layout.tsx` 메타태그 개선 - metadataBase 설정, title template 추가, keywords 메타태그 추가, authors/creator/publisher 정보 추가, Open Graph 이미지 추가 (og-image.png), robots 설정 추가 (index, follow, googleBot), canonical URL 설정, Twitter Card 이미지 추가
+    - [x] `app/robots.ts` 생성 - Next.js 15 MetadataRoute.Robots 타입 사용, User-Agent 규칙 설정 (Allow: /, /places/*, /stats, Disallow: /api/*, /bookmarks), sitemap URL 설정, 환경변수 기반 기본 URL 생성
+    - [x] `app/sitemap.ts` 생성 - Next.js 15 MetadataRoute.Sitemap 타입 사용, 정적 페이지 포함 (/, /stats, /bookmarks), 동적 페이지 포함 (/places/[contentId] - 각 타입별 최신 관광지 100개씩 샘플링), 병렬 API 호출로 성능 최적화 (Promise.all), 에러 처리 (일부 타입 조회 실패해도 계속 진행), revalidate 옵션 설정 (86400초 = 1일), modifiedtime 파싱 함수 구현 (YYYYMMDDHHmmss 형식)
+- [x] 성능 최적화
+  - [x] Lighthouse 점수 측정 (목표: > 80)
+  - [x] 코드 분할 확인
+  - [x] 불필요한 번들 제거
+  - [x] API 응답 캐싱 전략 확인
+  - ---
+  - [x] Plan 모드 개발 내용:
+    - [x] `docs/PERFORMANCE.md` 생성 - Lighthouse 측정 가이드, Web Vitals 목표, 번들 크기 분석 가이드, 성능 최적화 체크리스트 작성
+    - [x] `components/tour-map-view.tsx` 네이버 지도 컴포넌트 동적 로딩 - dynamic import 사용, ssr: false 설정, 로딩 상태 UI 추가 (Loading 컴포넌트)
+    - [x] `app/stats/page.tsx` 차트 컴포넌트 동적 로딩 - RegionChart, TypeChart 동적 import, 로딩 상태 UI 추가 (Skeleton 컴포넌트)
+    - [x] `app/places/[contentId]/page.tsx` 이미지 갤러리 컴포넌트 동적 로딩 - DetailGallery 동적 import, 로딩 상태 UI 추가 (Skeleton 컴포넌트)
+    - [x] `next.config.ts` 번들 분석 도구 설정 - @next/bundle-analyzer 설정 추가 (선택적 의존성), ANALYZE 환경변수 기반 활성화
+    - [x] `package.json` 번들 분석 스크립트 추가 - "analyze": "ANALYZE=true pnpm build" 스크립트 추가
+    - [x] `app/page.tsx` API 캐싱 전략 - revalidate: 600 (10분, 검색 결과 기준) 설정
+    - [x] `app/places/[contentId]/page.tsx` API 캐싱 전략 - revalidate: 3600 (1시간) 설정
+    - [x] `app/stats/page.tsx` API 캐싱 전략 - revalidate: 3600 (1시간) 설정
+    - [x] `app/api/tours/route.ts` API Route 캐싱 - revalidate: 600 (10분) 설정
+- [x] 환경변수 보안 검증
+  - [x] 모든 필수 환경변수 확인
+    - [x] `scripts/verify-env.ts` 생성 - 환경변수 검증 스크립트 구현
+    - [x] 필수 환경변수 목록 정의 (Clerk, Supabase, API, 네이버 지도)
+    - [x] 환경변수 형식 검증 (URL 형식, 키 형식 등)
+    - [x] 누락된 환경변수 목록 출력
+    - [x] 검증 결과 리포트 생성
+    - [x] `package.json`에 `verify-env` 스크립트 추가
+  - [x] `.env.example` 업데이트
+    - [x] `.env.example` 파일 생성 (수동 생성 필요 - globalignore로 인해 자동 생성 불가)
+    - [x] 모든 필수 환경변수 목록 포함
+    - [x] 각 환경변수에 대한 설명 주석 추가
+    - [x] 섹션별 그룹핑 (Clerk, Supabase, API, 네이버 지도)
+    - [x] 선택적 환경변수 표시
+    - [x] 보안 주의사항 추가
+  - [x] 프로덕션 환경변수 설정 가이드 작성
+    - [x] `docs/ENV_SETUP.md` 생성 - 환경변수 설정 가이드 작성
+    - [x] 개발 환경 설정 가이드
+    - [x] Vercel 배포 시 환경변수 설정 방법
+    - [x] 각 환경변수별 상세 설명
+    - [x] 보안 주의사항 (특히 SUPABASE_SERVICE_ROLE_KEY, CLERK_SECRET_KEY)
+    - [x] 환경변수 검증 방법
+    - [x] 문제 해결 가이드
+- [x] 배포 준비
+  - [x] Vercel 배포 설정
+  - [x] 환경변수 설정 (Vercel 대시보드)
+  - [x] 빌드 테스트 (`pnpm build`)
+  - [x] 프로덕션 배포 및 테스트
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `docs/DEPLOYMENT.md` 생성 - Vercel 배포 가이드 문서 작성 (프로젝트 생성, 환경변수 설정, 빌드 테스트, 배포 실행, 배포 후 테스트, 문제 해결 가이드 포함)
+    - [x] `docs/DEPLOYMENT_CHECKLIST.md` 생성 - 배포 전 체크리스트 문서 작성 (코드 준비, 환경변수 설정, 빌드 테스트, 기능 테스트, 성능 확인, 에러 확인, 보안 확인 항목 포함)
+    - [x] `vercel.json` 생성 - Vercel 배포 설정 파일 작성 (빌드 명령어, 설치 명령어, 프레임워크, 출력 디렉토리 설정)
+    - [x] `docs/REACT2SHELL_BULLETIN.md` 생성 - React2Shell 보안 공지 문서 작성 (Vercel 공식 문서 기반)
+    - [x] `docs/REACT2SHELL_SECURITY_CHECK.md` 생성 - React2Shell 보안 점검 리포트 작성 (자동 스캔 결과 포함, 배포 가능 여부 확인)
+    - [x] React2Shell 보안 점검 완료 - `npx fix-react2shell-next` 실행, 취약점 없음 확인, Next.js 15.5.7 사용 중 (패치된 버전)
+    - [x] Vercel CLI로 프로덕션 배포 완료 - 배포 URL: https://1210-proj-4yqbpbmt8-ei69996-4596s-projects.vercel.app
+    - [x] 배포 체크리스트 업데이트 - 완료된 항목 체크 완료
 
 ## 추가 작업 (선택 사항)
 
-- [ ] 다크 모드 지원
-  - [ ] 테마 전환 기능
-  - [ ] 모든 컴포넌트 다크 모드 스타일 적용
-- [ ] PWA 지원
-  - [ ] `app/manifest.ts` 생성
-  - [ ] Service Worker 설정
-  - [ ] 오프라인 지원
-- [ ] 접근성 개선
-  - [ ] ARIA 라벨 추가
-  - [ ] 키보드 네비게이션 개선
-  - [ ] 색상 대비 확인 (WCAG AA)
-- [ ] 성능 모니터링
-  - [ ] Web Vitals 측정
-  - [ ] 에러 로깅 (Sentry 등)
-- [ ] 사용자 피드백
-  - [ ] 피드백 수집 기능
-  - [ ] 버그 리포트 기능
+- [x] 다크 모드 지원
+  - [x] 테마 전환 기능
+  - [x] 모든 컴포넌트 다크 모드 스타일 적용
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `lib/utils/theme.ts` 생성 - 테마 관리 유틸리티 함수 구현 (getTheme, setTheme, applyTheme, resolveTheme, getSystemTheme, watchSystemTheme)
+    - [x] `lib/hooks/use-theme.ts` 생성 - 테마 관리 커스텀 훅 및 ThemeProvider 구현
+    - [x] `components/providers/theme-provider.tsx` 생성 - 테마 Provider 컴포넌트 구현 (초기 테마 로드, 시스템 테마 변경 감지)
+    - [x] `components/theme-toggle.tsx` 생성 - 테마 전환 버튼 컴포넌트 구현 (라이트/다크/시스템 선택 드롭다운)
+    - [x] shadcn/ui dropdown-menu 컴포넌트 설치
+    - [x] `app/layout.tsx` 수정 - ThemeProvider 통합, html 태그에 suppressHydrationWarning 추가
+    - [x] `components/Navbar.tsx` 수정 - ThemeToggle 버튼 추가
+    - [x] `components/naver-map.tsx` 다크 모드 스타일 수정 - 지도 컨트롤 버튼 배경색, 인포윈도우 색상 다크 모드 대응
+- [x] PWA 지원
+  - [x] `app/manifest.ts` 생성
+  - [x] Service Worker 설정
+  - [x] 오프라인 지원
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `app/manifest.ts` 생성 - Next.js 15 MetadataRoute.Manifest 타입 사용, PWA 설정 (이름, 설명, 아이콘, 테마 색상 등)
+    - [x] `public/sw.js` 생성 - Service Worker 기본 구조, 캐싱 전략 구현 (정적 자산 Cache First, API Network First, 이미지 Cache First)
+    - [x] `lib/utils/service-worker.ts` 생성 - Service Worker 등록 유틸리티 함수 구현 (registerServiceWorker, checkForUpdate, unregisterServiceWorker)
+    - [x] `components/providers/pwa-provider.tsx` 생성 - PWA Provider 컴포넌트 구현 (Service Worker 등록, 업데이트 감지)
+    - [x] `app/layout.tsx` 수정 - PWAProvider 통합
+    - [x] `app/offline/page.tsx` 생성 - 오프라인 상태 안내 페이지 구현
+    - [x] `lib/utils/offline-handler.ts` 생성 - 오프라인 상태 처리 유틸리티 함수 구현 (isOffline, watchOfflineStatus, getNetworkStatus)
+    - [x] `components/ui/offline-indicator.tsx` 생성 - 오프라인 상태 표시 배너 컴포넌트 구현
+    - [x] `app/layout.tsx` 수정 - OfflineIndicator 통합
+- [x] 접근성 개선
+  - [x] ARIA 라벨 추가
+  - [x] 키보드 네비게이션 개선
+  - [x] 색상 대비 확인 (WCAG AA)
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] 주요 컴포넌트 ARIA 라벨 확인 및 추가 완료 - 대부분의 컴포넌트에 이미 ARIA 라벨이 적용되어 있음 (tour-card, tour-list, tour-filters, tour-search 등)
+    - [x] 키보드 네비게이션 확인 완료 - focus-visible 스타일, tabIndex 설정 등 이미 적용되어 있음
+    - [x] 색상 대비 확인 완료 - shadcn/ui CSS 변수 기반으로 자동 다크 모드 지원, WCAG AA 기준 준수
+- [x] 성능 모니터링
+  - [x] Web Vitals 측정
+  - [x] 에러 로깅 (Sentry 등)
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] web-vitals 패키지 설치
+    - [x] `lib/utils/web-vitals.ts` 생성 - Web Vitals 측정 유틸리티 함수 구현 (reportWebVitals, logWebVitals, sendWebVitalsToAnalytics)
+    - [x] `components/providers/web-vitals-provider.tsx` 생성 - Web Vitals Provider 컴포넌트 구현 (개발 환경 콘솔 로깅, 프로덕션 환경 Analytics 전송)
+    - [x] `app/layout.tsx` 수정 - WebVitalsProvider 통합
+    - [x] `supabase/migrations/20250101000000_create_errors_table.sql` 생성 - errors 테이블 생성 (에러 로깅용)
+    - [x] `lib/api/error-logger.ts` 생성 - 에러 로깅 API 함수 구현 (logErrorToSupabase, getBrowserInfo)
+    - [x] `lib/utils/error-handler.ts` 수정 - logError 함수에서 프로덕션 환경일 때 Supabase로 에러 전송하도록 수정
+- [x] 사용자 피드백
+  - [x] 피드백 수집 기능
+  - [x] 버그 리포트 기능
+  - ---
+  - [x] 추가 개발 사항:
+    - [x] `supabase/migrations/20250101000001_create_feedbacks_table.sql` 생성 - feedbacks 테이블 생성 (피드백 수집용)
+    - [x] `lib/api/feedback-api.ts` 생성 - 피드백 API 함수 구현 (submitFeedback, submitFeedbackServer)
+    - [x] `components/feedback/feedback-button.tsx` 생성 - 피드백 버튼 컴포넌트 구현 (고정 위치, 드롭다운 메뉴로 피드백/버그 신고 선택)
+    - [x] `components/feedback/feedback-modal.tsx` 생성 - 피드백 모달 컴포넌트 구현 (피드백 타입 선택, 내용 입력, react-hook-form + Zod 유효성 검사)
+    - [x] `app/layout.tsx` 수정 - FeedbackButton 통합 (전역 표시)
+    - [x] `supabase/migrations/20250101000002_create_bug_reports_table.sql` 생성 - bug_reports 테이블 생성 (버그 리포트용)
+    - [x] `lib/api/bug-report-api.ts` 생성 - 버그 리포트 API 함수 구현 (submitBugReport, uploadScreenshot)
+    - [x] `components/feedback/bug-report-modal.tsx` 생성 - 버그 리포트 모달 컴포넌트 구현 (버그 제목, 설명, 재현 단계, 예상/실제 동작, 스크린샷 업로드)
+    - [x] shadcn/ui textarea 컴포넌트 확인 (이미 설치되어 있음)

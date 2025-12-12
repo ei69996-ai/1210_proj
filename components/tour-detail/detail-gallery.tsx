@@ -28,6 +28,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Keyboard } from "swiper/modules";
+import { cn } from "@/lib/utils";
 import type { Swiper as SwiperType } from "swiper";
 import type { TourImage } from "@/lib/types/tour";
 import {

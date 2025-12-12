@@ -1,6 +1,7 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { getServiceRoleClient } from "@/lib/supabase/service-role";
+import { createErrorResponse, logError } from "@/lib/utils/error-handler";
 
 /**
  * Clerk 사용자를 Supabase users 테이블에 동기화하는 API
@@ -14,7 +15,11 @@ export async function POST() {
     const { userId } = await auth();
 
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      const errorResponse = createErrorResponse(
+        new Error("인증이 필요합니다."),
+        401
+      );
+      return NextResponse.json(errorResponse, { status: 401 });
     }
 
     // Clerk에서 사용자 정보 가져오기
@@ -22,7 +27,11 @@ export async function POST() {
     const clerkUser = await client.users.getUser(userId);
 
     if (!clerkUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      const errorResponse = createErrorResponse(
+        new Error("사용자를 찾을 수 없습니다."),
+        404
+      );
+      return NextResponse.json(errorResponse, { status: 404 });
     }
 
     // Supabase에 사용자 정보 동기화
@@ -47,11 +56,12 @@ export async function POST() {
       .single();
 
     if (error) {
-      console.error("Supabase sync error:", error);
-      return NextResponse.json(
-        { error: "Failed to sync user", details: error.message },
-        { status: 500 }
+      logError(error, "app/api/sync-user/route.ts (Supabase)");
+      const errorResponse = createErrorResponse(
+        new Error(`사용자 동기화 실패: ${error.message}`),
+        500
       );
+      return NextResponse.json(errorResponse, { status: 500 });
     }
 
     return NextResponse.json({
@@ -59,10 +69,13 @@ export async function POST() {
       user: data,
     });
   } catch (error) {
-    console.error("Sync user error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
+    logError(error, "app/api/sync-user/route.ts");
+    const errorResponse = createErrorResponse(
+      error instanceof Error
+        ? error
+        : new Error("서버 내부 오류가 발생했습니다."),
+      500
     );
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }

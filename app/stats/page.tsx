@@ -19,6 +19,7 @@
  */
 
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Error } from "@/components/ui/error";
 import {
   getStatsSummary,
@@ -26,8 +27,24 @@ import {
   getTypeStats,
 } from "@/lib/api/stats-api";
 import { StatsSummary } from "@/components/stats/stats-summary";
-import { RegionChart } from "@/components/stats/region-chart";
-import { TypeChart } from "@/components/stats/type-chart";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// 차트 컴포넌트 동적 로딩 (recharts 라이브러리 번들 크기 최적화)
+const RegionChart = dynamic(() => import("@/components/stats/region-chart").then((mod) => ({ default: mod.RegionChart })), {
+  loading: () => (
+    <div className="w-full">
+      <Skeleton className="h-[400px] w-full" />
+    </div>
+  ),
+});
+
+const TypeChart = dynamic(() => import("@/components/stats/type-chart").then((mod) => ({ default: mod.TypeChart })), {
+  loading: () => (
+    <div className="w-full">
+      <Skeleton className="h-[400px] w-full" />
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "통계 대시보드 - My Trip",
@@ -38,6 +55,10 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
+
+// 페이지 레벨 캐싱 설정
+// 통계 데이터: 1시간 (변동이 적으므로)
+export const revalidate = 3600; // 1시간
 
 export default async function StatsPage() {
   let summary = null;
@@ -53,31 +74,31 @@ export default async function StatsPage() {
   try {
     // 통계 요약 데이터 조회
     summary = await getStatsSummary();
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("통계 요약 데이터 조회 실패:", error);
     hasError = true;
     errorMessage =
-      error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다";
+      error instanceof Error ? (error as Error).message : "알 수 없는 오류가 발생했습니다";
   }
 
   try {
     // 지역별 통계 데이터 조회
     regionStats = await getRegionStats();
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("지역별 통계 데이터 조회 실패:", error);
     regionError = true;
     regionErrorMessage =
-      error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다";
+      error instanceof Error ? (error as Error).message : "알 수 없는 오류가 발생했습니다";
   }
 
   try {
     // 타입별 통계 데이터 조회
     typeStats = await getTypeStats();
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("타입별 통계 데이터 조회 실패:", error);
     typeError = true;
     typeErrorMessage =
-      error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다";
+      error instanceof Error ? (error as Error).message : "알 수 없는 오류가 발생했습니다";
   }
 
   return (

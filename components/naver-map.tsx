@@ -474,19 +474,26 @@ export function NaverMap({
   const createInfoWindowContent = (tour: TourItem): string => {
     const address = tour.addr2 ? `${tour.addr1} ${tour.addr2}` : tour.addr1;
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    // 다크 모드 감지
+    const isDark = typeof window !== "undefined" && document.documentElement.classList.contains("dark");
+    const textColor = isDark ? "#e5e7eb" : "#374151";
+    const bgColor = isDark ? "#1f2937" : "#ffffff";
+    const linkBgColor = isDark ? "#3b82f6" : "#007bff";
+    const linkHoverBgColor = isDark ? "#2563eb" : "#0056b3";
+    
     return `
-      <div style="padding: ${isMobile ? "10px" : "12px"}; min-width: ${isMobile ? "180px" : "200px"}; max-width: ${isMobile ? "250px" : "300px"};">
-        <h3 style="margin: 0 0 ${isMobile ? "6px" : "8px"} 0; font-size: ${isMobile ? "14px" : "16px"}; font-weight: 600; line-height: 1.4; word-break: keep-all;">
+      <div style="padding: ${isMobile ? "10px" : "12px"}; min-width: ${isMobile ? "180px" : "200px"}; max-width: ${isMobile ? "250px" : "300px"}; background-color: ${bgColor}; color: ${textColor};">
+        <h3 style="margin: 0 0 ${isMobile ? "6px" : "8px"} 0; font-size: ${isMobile ? "14px" : "16px"}; font-weight: 600; line-height: 1.4; word-break: keep-all; color: ${textColor};">
           ${tour.title}
         </h3>
-        <p style="margin: 0 0 ${isMobile ? "10px" : "12px"} 0; font-size: ${isMobile ? "12px" : "14px"}; color: #666; line-height: 1.4; word-break: keep-all;">
+        <p style="margin: 0 0 ${isMobile ? "10px" : "12px"} 0; font-size: ${isMobile ? "12px" : "14px"}; color: ${isDark ? "#9ca3af" : "#666"}; line-height: 1.4; word-break: keep-all;">
           ${address}
         </p>
         <a 
           href="/places/${tour.contentid}" 
-          style="display: inline-block; padding: ${isMobile ? "5px 10px" : "6px 12px"}; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: ${isMobile ? "12px" : "14px"}; transition: background-color 0.2s;"
-          onmouseover="this.style.backgroundColor='#0056b3'"
-          onmouseout="this.style.backgroundColor='#007bff'"
+          style="display: inline-block; padding: ${isMobile ? "5px 10px" : "6px 12px"}; background: ${linkBgColor}; color: white; text-decoration: none; border-radius: 4px; font-size: ${isMobile ? "12px" : "14px"}; transition: background-color 0.2s;"
+          onmouseover="this.style.backgroundColor='${linkHoverBgColor}'"
+          onmouseout="this.style.backgroundColor='${linkBgColor}'"
           onclick="event.stopPropagation();"
         >
           상세보기
@@ -594,7 +601,7 @@ export function NaverMap({
       {!error && (
         <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
           {/* 줌 컨트롤 */}
-          <div className="flex flex-col gap-1 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-border/50">
+          <div className="flex flex-col gap-1 bg-background/95 dark:bg-card/95 backdrop-blur-sm rounded-lg shadow-lg border border-border/50">
             <Button
               variant="ghost"
               size="icon"
@@ -620,7 +627,7 @@ export function NaverMap({
             variant="ghost"
             size="icon"
             onClick={handleMapTypeChange}
-            className="bg-white/95 backdrop-blur-sm shadow-lg border border-border/50 hover:bg-muted/50 h-11 w-11"
+            className="bg-background/95 dark:bg-card/95 backdrop-blur-sm shadow-lg border border-border/50 hover:bg-muted/50 h-11 w-11"
             aria-label={mapType === "NORMAL" ? "스카이뷰로 전환" : "일반 지도로 전환"}
           >
             {mapType === "NORMAL" ? (
@@ -635,7 +642,7 @@ export function NaverMap({
             variant="ghost"
             size="icon"
             onClick={handleCurrentLocation}
-            className="bg-white/95 backdrop-blur-sm shadow-lg border border-border/50 hover:bg-muted/50 h-11 w-11"
+            className="bg-background/95 dark:bg-card/95 backdrop-blur-sm shadow-lg border border-border/50 hover:bg-muted/50 h-11 w-11"
             aria-label="현재 위치로 이동"
           >
             <Navigation className="h-5 w-5" />

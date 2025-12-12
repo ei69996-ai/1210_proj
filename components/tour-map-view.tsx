@@ -22,12 +22,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import type { TourItem, PetTourInfo } from "@/lib/types/tour";
 import { TourList } from "@/components/tour-list";
-import { NaverMap } from "@/components/naver-map";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SortOption } from "@/lib/types/filter";
 import { useInfiniteTours } from "@/hooks/use-infinite-tours";
+import { Loading } from "@/components/ui/loading";
+
+// 네이버 지도 컴포넌트 동적 로딩 (번들 크기 최적화)
+const NaverMap = dynamic(() => import("@/components/naver-map").then((mod) => ({ default: mod.NaverMap })), {
+  ssr: false, // 클라이언트 사이드만 렌더링
+  loading: () => (
+    <div className="flex items-center justify-center h-full bg-muted/50">
+      <Loading size="lg" />
+    </div>
+  ),
+});
 
 interface TourMapViewProps {
   /** 초기 관광지 목록 (Server Component에서 가져온 첫 페이지) */

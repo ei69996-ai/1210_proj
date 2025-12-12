@@ -35,17 +35,32 @@
 
 import Link from "next/link";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { ArrowLeft } from "lucide-react";
 import { getDetailCommon, getDetailIntro, getDetailImage, getDetailPetTour } from "@/lib/api/tour-api";
 import { DetailInfo } from "@/components/tour-detail/detail-info";
 import { DetailIntro } from "@/components/tour-detail/detail-intro";
-import { DetailGallery } from "@/components/tour-detail/detail-gallery";
 import { DetailMap } from "@/components/tour-detail/detail-map";
 import { DetailPetTour } from "@/components/tour-detail/detail-pet-tour";
 import { DetailRecommendations } from "@/components/tour-detail/detail-recommendations";
 import { ShareButton } from "@/components/tour-detail/share-button";
 import { BookmarkButton } from "@/components/bookmarks/bookmark-button";
 import { Error } from "@/components/ui/error";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// 이미지 갤러리 컴포넌트 동적 로딩 (Swiper 라이브러리 번들 크기 최적화)
+const DetailGallery = dynamic(() => import("@/components/tour-detail/detail-gallery").then((mod) => ({ default: mod.DetailGallery })), {
+  loading: () => (
+    <div className="w-full space-y-4">
+      <Skeleton className="h-[400px] w-full" />
+      <div className="grid grid-cols-4 gap-2">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton key={i} className="h-20 w-full" />
+        ))}
+      </div>
+    </div>
+  ),
+});
 
 interface PageProps {
   params: Promise<{ contentId: string }>;
@@ -143,6 +158,10 @@ export async function generateMetadata({
   }
 }
 
+// 페이지 레벨 캐싱 설정
+// 상세 정보: 1시간 (이미지는 2시간이지만, 전체 페이지는 1시간)
+export const revalidate = 3600; // 1시간
+
 export default async function PlaceDetailPage({ params }: PageProps) {
   // Next.js 15: params는 Promise이므로 await 처리 필요
   const { contentId } = await params;
@@ -183,10 +202,10 @@ export default async function PlaceDetailPage({ params }: PageProps) {
   let detail;
   try {
     detail = await getDetailCommon(contentId);
-  } catch (error) {
+  } catch (error: unknown) {
     const errorMessage =
       error instanceof Error
-        ? error.message
+        ? (error as Error).message
         : "관광지 정보를 불러오는 중 오류가 발생했습니다.";
 
     return (
